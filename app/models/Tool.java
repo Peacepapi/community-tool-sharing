@@ -17,4 +17,6 @@ public class Tool extends Model {
 
     @Constraints.Required
     public String name;
+
+    public static Finder<Long, Tool> find = new Finder<Long, Tool>(Tool.class);
 }

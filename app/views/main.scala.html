@@ -10,6 +10,15 @@
         <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
     </head>
     <body>
+        @if(flash.containsKey("success")) {
+            <p>Success!:</p>
+            @flash.get("success")
+        }
+        @if(flash.containsKey("error")) {
+            <p>Error!:</p>
+            @flash.get("error")
+        }
+
         @content
     </body>
 </html>
