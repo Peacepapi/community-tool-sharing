@@ -18,10 +18,16 @@ public class Tools extends Controller {
     }
 
     public Result create() {
-        Tool tool = Form.form(Tool.class).bindFromRequest().get();
-        tool.save();
-        flash("sucess", "Saved new Tool: " + tool.name);
+
+        if (Form.form(Tool.class).bindFromRequest().hasErrors()) {
+            flash("error", "Missing fields!");
+        } else {
+            Tool tool = Form.form(Tool.class).bindFromRequest().get();
+            tool.save();
+            flash("sucess", "Saved new Tool: " + tool.name);
+        }
         return redirect(routes.Tools.index());
+
     }
 
 }
