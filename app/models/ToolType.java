@@ -5,29 +5,25 @@ import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
 
-import models.ToolType;
 
 /**
  * Created by Mike on 11/14/2015.
  */
 
 @Entity
-public class Tool extends Model {
+public class ToolType extends Model {
     @Id
     public Long id;
 
     @Constraints.Required
     public String name;
 
+    @OneToMany
+    public List<Tool> toolList;
 
-    public String description;
+  	public static Finder<Long, ToolType> find = new Finder<Long, ToolType>(ToolType.class);
 
-    @ManyToOne
-    public ToolType type;
-
-    public String owner;
-
-    public static Finder<Long, Tool> find = new Finder<Long, Tool>(Tool.class);
 }
