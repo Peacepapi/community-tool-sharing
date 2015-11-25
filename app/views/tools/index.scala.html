@@ -10,7 +10,7 @@
         <button>Add Tool</button>
     </form>
 
-    @if(tools.isEmpty()) {
+    @if(tools == null || tools.isEmpty()) {
         <h2>There are no tools available</h2>
     } else {
         <h2>Tool List</h2>
@@ -27,16 +27,12 @@
                     <td>@t.name</td>
                     <td>@t.description</td>
                     <td>
-                        @if(session.containsKey("user_id")
-                            && !Long.parseLong(session.get("user_id")).equals(t.owner.id)) {
-                            <form action="@routes.Tools.borrow(t.id)" method="post">
-                                <button>Borrow</button>
-                            </form>
-                        } else {
+                        @if(session.containsKey("user_id")) {
                             <form action="@routes.Tools.delete(t.id)" method="post">
                                 <button>Delete</button>
                             </form>
                         }
+
                     </td>
                 </tr>
             }

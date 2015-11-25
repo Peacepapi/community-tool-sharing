@@ -23,12 +23,12 @@ public class Tools extends Controller {
 
 
     public Result index() {
-        List<Tool> tools = null; /*
+        List<Tool> tools = null;
         if (session("user_id") != null) {
             Users user = Users.find.byId(Long.parseLong(session("user_id")));
             tools = Tool.find.query().where("owner_id="+user.id).findList();
-        }*/
-        tools = Tool.find.all();
+        }
+//        tools = Tool.find.all();
         return ok(views.html.tools.index.render(tools));
     }
 
@@ -60,7 +60,7 @@ public class Tools extends Controller {
         */
         return redirect(routes.Tools.index());
     }
-
+/*
     @Security.Authenticated(UserAuth.class)
     public Result borrowOrDelete(Long id, int requestCode) {
         switch (requestCode) {
@@ -75,7 +75,7 @@ public class Tools extends Controller {
         }
         return redirect(routes.Tools.index());
     }
-
+*/
     @Security.Authenticated(UserAuth.class)
     public Result borrow(Long id) {
 
