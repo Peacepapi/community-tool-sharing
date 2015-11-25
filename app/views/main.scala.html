@@ -20,8 +20,8 @@
         @*******************
         * Check session if user is logged in *
         *******************@
-        @if(session.containsKey("user_id")){
-            <p>Hello @Users.find.byId(Long.parseLong(session.get("user_id"))).username </p>
+        @if(session.containsKey("user_id") && Users.find.byId(Long.parseLong(session.get("user_id"))) != null ){
+            <p>Hello, @Users.find.byId(Long.parseLong(session.get("user_id"))).username </p>
             <form action="@routes.Application.logout()" method="get">
                 <button>Log out</button>
             </form>
@@ -30,7 +30,7 @@
                 <label for="username">Username</label>
                 <input type="text" name="username" required>
                 <label for="description">Password</label>
-                <input type="text" name="password" required>
+                <input type="password" name="password" required>
                 <button>Login</button>
             </form>
             <form action="@routes.Application.onSignUpClick()" method="get">

@@ -14,13 +14,32 @@
         <h2>There are no tools available</h2>
     } else {
         <h2>Tool List</h2>
-        <ol>
-            @for(g <- tools) {
-                <li>@g.name</li>
-                <ul>
-                    <li>@g.description</li>
-                </ul>
+
+        <table style="width:100%">
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Description</td>
+            </tr>
+            @for(t <- tools) {
+                <tr>
+                    <td>@t.id</td>
+                    <td>@t.name</td>
+                    <td>@t.description</td>
+                    <td>
+                        @if(session.containsKey("user_id")
+                            && !Long.parseLong(session.get("user_id")).equals(t.owner.id)) {
+                            <form action="@routes.Tools.borrow(t.id)" method="post">
+                                <button>Borrow</button>
+                            </form>
+                        } else {
+                            <form action="@routes.Tools.delete(t.id)" method="post">
+                                <button>Delete</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
             }
-        </ol>
+        </table>
     }
 }

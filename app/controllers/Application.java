@@ -42,6 +42,8 @@ public class Application extends Controller {
         String username = userForm.data().get("username");
         String password = userForm.data().get("password");
 
+        
+
         Users user = Users.createNewUser(username, password);
         if (user == null) {
             flash("error", "Invalid password!.");
