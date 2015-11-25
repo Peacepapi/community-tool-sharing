@@ -17,6 +17,7 @@ public class Tools extends Controller {
         return ok(views.html.tools.index.render(tools));
     }
 
+    @Security.Authenticated(UserAuth.class)
     public Result create() {
 
         if (Form.form(Tool.class).bindFromRequest().hasErrors()) {
@@ -27,7 +28,6 @@ public class Tools extends Controller {
             flash("sucess", "Saved new Tool: " + tool.name);
         }
         return redirect(routes.Tools.index());
-
     }
 
 }
