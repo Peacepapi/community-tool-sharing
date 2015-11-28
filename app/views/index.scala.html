@@ -2,8 +2,22 @@
 
 @main(title) {
 
-    <form action="@routes.Tools.index()" method="get">
-        <button>Tools</button>
-    </form>
+    <div class="jumbotron index-main">
+        <div class="container">
+            <h2>CTS</h2><br>
+            <p>Borrow tools instead of buying!<br>
+           	Share tools with others among others! 
+            </p>
+     
+    	</div>
 
+
+        @if(flash.containsKey("success")) {
+            @*<p>Success!:</p>*@
+            <p class="text-center success">@flash.get("success")</p>
+        } else { @if(flash.containsKey("error")) {
+            @*<p>Error!:</p>*@
+            <p class="text-center error">@flash.get("error")</p>
+        }}
+    </div>
 }

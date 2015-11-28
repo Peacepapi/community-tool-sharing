@@ -5,47 +5,15 @@
 <html lang="en">
     <head>
         <title>@title</title>
-
         <link rel="stylesheet" href="@routes.Assets.versioned("lib/bootstrap/css/bootstrap.min.css")">
 
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+        
         <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
     </head>
     <body>
-        <form action="@routes.Application.index()" method="get">
-            <button>Home</button>
-        </form>
 
-        @*******************
-        * Check session if user is logged in *
-        *******************@
-        @if(session.containsKey("user_id")){
-            <p>Hello @Users.find.byId(Long.parseLong(session.get("user_id"))).username </p>
-            <form action="@routes.Application.logout()" method="get">
-                <button>Log out</button>
-            </form>
-        } else {
-            <form action="@routes.Application.login()" method="post">
-                <label for="username">Username</label>
-                <input type="text" name="username" required>
-                <label for="description">Password</label>
-                <input type="text" name="password" required>
-                <button>Login</button>
-            </form>
-            <form action="@routes.Application.onSignUpClick()" method="get">
-                <button>Sign up!</button>
-            </form>
-        }
-
-        @if(flash.containsKey("success")) {
-            @*<p>Success!:</p>*@
-            @flash.get("success")
-        } else { @if(flash.containsKey("error")) {
-            @*<p>Error!:</p>*@
-            @flash.get("error")
-        }}
-
+        @header()
         @content
 
     </body>

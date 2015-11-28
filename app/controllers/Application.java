@@ -13,7 +13,7 @@ import static play.data.Form.form;
 public class Application extends Controller {
 
     public Result index() {
-        return ok(index.render("home page"));
+        return ok(index.render("CTS | Community Tool Sharing"));
     }
 
     public Result login() {
@@ -44,7 +44,7 @@ public class Application extends Controller {
 
         Users user = Users.createNewUser(username, password);
         if (user == null) {
-            flash("error", "Invalid password!.");
+            flash("error", "Invalid password!");
             return redirect(routes.Application.register());
         }
 

@@ -1,0 +1,38 @@
+<div class="container">
+    <a href="@routes.Application.index()" class="navbar-brand navbar-left" style="color:white">CTS</a>
+
+    @*******************
+    * Check session if user is logged in *
+    *******************@
+    @if(session.containsKey("user_id")){
+
+    <div class="nav navbar-right"> 
+
+        <form action="@routes.Tools.index()" method="get">
+            <button>Tools</button>
+         </form>
+
+        Hello @Users.find.byId(Long.parseLong(session.get("user_id"))).username 
+
+        <form action="@routes.Application.logout()" method="get">
+            <button>Log out</button>
+        </form>
+    </div>
+
+    } else {
+    <div class=" nav navbar-right">
+        <div class="pull-left">
+            <form class="form-inline" action="@routes.Application.login()" method="post">
+                    <input type="text" placeholder="Username" name="username" required>
+                    <input type="password" placeholder="Password" name="password" required>
+                    <button class="btn btn-success">Login</button>
+             </form>
+        </div>
+        <div class="pull-right">
+            <form action="@routes.Application.onSignUpClick()" method="get">
+            <button class="btn btn-danger" >Sign up!</button>
+            </form>
+        </div>
+    </div>
+    }
+</div>
