@@ -40,9 +40,10 @@ public class Application extends Controller {
     public Result register() {
         DynamicForm userForm = form().bindFromRequest();
         String username = userForm.data().get("username");
+        String email    = userForm.data().get("email");
         String password = userForm.data().get("password");
 
-        Users user = Users.createNewUser(username, password);
+        Users user = Users.createNewUser(username, password, email);
         if (user == null) {
             flash("error", "Invalid password!");
             return redirect(routes.Application.register());

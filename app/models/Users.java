@@ -22,6 +22,9 @@ public class Users extends Model {
     @Constraints.Required
     public String username;
 
+    @Constraints.Required
+    public String email;
+
     public String password_hash;
 
     public static Model.Finder<Long, Users> find = new Model.Finder<Long, Users>(Users.class);
@@ -30,8 +33,8 @@ public class Users extends Model {
         return BCrypt.checkpw(password, this.password_hash);
     }
 
-    public static Users createNewUser(String username, String password) {
-        if(password == null || username == null || password.length() < 8) {
+    public static Users createNewUser(String username, String password,String email) {
+        if(password == null || username == null || password.length() < 8 || email == null) {
             return null;
         }
 
@@ -39,6 +42,7 @@ public class Users extends Model {
 
         Users user = new Users();
         user.username = username;
+        user.email = email;
         user.password_hash = passwordHash;
 
         return user;
