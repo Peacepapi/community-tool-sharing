@@ -13,7 +13,7 @@
 
     <body>
         <div class="container">
-            <a href="@routes.Application.index()" class="navbar-brand navbar-left" style="color:white">CTS</a>
+            <a href="@routes.Application.index()" class="navbar-brand navbar-left" style="color:black">CTS</a>
         </div>
         <div class="jumbotron">
             @if(flash.containsKey("error")){
@@ -29,7 +29,7 @@
                         <label for="description">Password</label>
                         <input type="password" name="password" required>
                     </div>
-                    <button>Register</button>
+                    <button class="btn btn-default">Register</button>
 
                 </form>
 
