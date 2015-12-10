@@ -36,7 +36,20 @@
             <form action="@routes.Application.onSignUpClick()" method="get">
                 <button>Sign up!</button>
             </form>
+            <br>
         }
+        <form action="@routes.Tools.create()" method="post">
+            <label for="name">Tool Name</label>
+            <input type="text" name="name" required>
+            <label for="description">Description</label>
+            <input type="text" name="description" required>
+            <button>Add Tool</button>
+        </form>
+        <br>
+        <form action="@routes.Tools.index()" method="get">
+            <button>Tools</button>
+        </form>
+
 
         @if(flash.containsKey("success")) {
             @*<p>Success!:</p>*@

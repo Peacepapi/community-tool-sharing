@@ -42,11 +42,13 @@ public class Application extends Controller {
         String username = userForm.data().get("username");
         String password = userForm.data().get("password");
 
-        
 
         Users user = Users.createNewUser(username, password);
-        if (user == null) {
-            flash("error", "Invalid password!.");
+        if (user.username == null) {
+            flash("error","Username already exist!");
+            return redirect(routes.Application.register());
+        } else if (user.password_hash == null) {
+            flash ("error", "Password is invalid!");
             return redirect(routes.Application.register());
         }
 

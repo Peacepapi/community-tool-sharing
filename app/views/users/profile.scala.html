@@ -1,0 +1,29 @@
+@(user: Users, tools: List[Tool])
+
+@main(user.username) {
+
+    <p>
+        @user.username;
+        <br>
+        @if( tools == null || tools.isEmpty() ) {
+            <h2>You have not added any tools</h2>
+        } else {
+            <h2>Tool List</h2>
+
+            <table style="width:100%">
+                <tr>
+                    <td>ID</td>
+                    <td>Name</td>
+                    <td>Description</td>
+                </tr>
+                @for(t <- tools) {
+                    <tr>
+                        <td>@t.id</td>
+                        <td>@t.name</td>
+                        <td>@t.description</td>
+                    </tr>
+                }
+            </table>
+        }
+    </p>
+}

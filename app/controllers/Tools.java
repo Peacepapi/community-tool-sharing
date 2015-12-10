@@ -24,12 +24,23 @@ public class Tools extends Controller {
 
     public Result index() {
         List<Tool> tools = null;
-        if (session("user_id") != null) {
-            Users user = Users.find.byId(Long.parseLong(session("user_id")));
-            tools = Tool.find.query().where("owner_id="+user.id).findList();
-        }
 //        tools = Tool.find.all();
-        return ok(views.html.tools.index.render(tools));
+        return ok(views.html.browse.render(tools));
+    }
+
+    public Result getToolByUserId(Long user_id) {
+        List<Tool> tools = Tool.find.query().where("owner_id="+user_id).findList();
+        return ok(views.html.browse.render(tools));
+    }
+
+    @Security.Authenticated(UserAuth.class)
+    public Result ownedTools() {
+        List<Tool> tools = null;
+        if (session("user_id") != null) {
+            Long user_id = Long.parseLong(session("user_id"));
+            tools = Tool.find.query().where("owner_id="+user_id).findList();
+        }
+        return ok(views.html.tools.ownedTools.render(tools));
     }
 
     @Security.Authenticated(UserAuth.class)

@@ -22,9 +22,9 @@ public class Users extends Model {
     public Long id;
 
     @Constraints.Required
-    public String username;
+    public String username = null;
 
-    public String password_hash;
+    public String password_hash = null;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "owner")
     public List<Tool> tools_owned;
@@ -40,15 +40,21 @@ public class Users extends Model {
     }
 
     public static Users createNewUser(String username, String password) {
-        if(password == null || username == null || password.length() < 8) {
-            return null;
+
+        Users user = Users.find.where().eq("username", username).findUnique();
+        if (user != null) {
+            user = new Users();
+        } else {
+            user = new Users();
+            user.username = username;
         }
 
-        String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
-
-        Users user = new Users();
-        user.username = username;
-        user.password_hash = passwordHash;
+        if(password == null || username == null || password.length() < 8) {
+            user.password_hash = null;
+        } else {
+            String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
+            user.password_hash = passwordHash;
+        }
 
         return user;
     }
