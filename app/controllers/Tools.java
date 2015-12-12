@@ -132,3 +132,15 @@ public class Tools extends Controller {
         return redirect(routes.Tools.index());
     }
 }
+    public Result browse() {
+        List<Tool> tools = Tool.find.all();
+        return ok(views.html.tools.browse.render(tools));
+    }
+    public Result eachTool(long id) {
+        Tool tool = Tool.find.byId(id);
+        if(tool == null) 
+            return notFound("No such tool listed");
+        else
+        return ok(views.html.tools.eachTool.render(tool));
+    }
+}

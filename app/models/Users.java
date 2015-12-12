@@ -8,6 +8,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.List;
+import javax.persistence.Table;
+import javax.persistence.Column;
+
 import javax.validation.Constraint;
 import java.util.List;
 
@@ -15,6 +19,7 @@ import java.util.List;
  * Created by Mike on 11/22/2015.
  */
 
+@Table(name="users")
 @Entity
 public class Users extends Model {
 
@@ -22,23 +27,29 @@ public class Users extends Model {
     public Long id;
 
     @Constraints.Required
-    public String username = null;
 
-    public String password_hash = null;
+    @Column(unique=true)
+    public String username;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "owner")
-    public List<Tool> tools_owned;
+    @Constraints.Required
+    public String email;
 
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "borrower")
-    public List<Tool> tools_borrowed;
+    public String password_hash;
 
-    public static Model.Finder<Long, Users> find = new Finder<Long, Users>(Users.class);
+    @OneToMany
+    public List<Tool> toolList;
+
+    public static Model.Finder<Long, Users> find = new Model.Finder<Long, Users>(Users.class);
 
     public boolean authenticate(String password) {
         return BCrypt.checkpw(password, this.password_hash);
     }
 
-    public static Users createNewUser(String username, String password) {
+    public static Users createNewUser(String username, String password,String email) {
+        if(password == null || username == null || password.length() < 8 || 
+            email == null ) {
+            return null;
+        }
 
         Users user = Users.find.where().eq("username", username).findUnique();
         if (user != null) {
@@ -54,8 +65,11 @@ public class Users extends Model {
             String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
             user.password_hash = passwordHash;
         }
+        Users user = new Users();
+        user.username = username;
+        user.email = email;
+        user.password_hash = passwordHash;
 
         return user;
     }
-
 }

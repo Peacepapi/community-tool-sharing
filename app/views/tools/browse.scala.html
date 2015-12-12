@@ -1,0 +1,39 @@
+@(tools: List[Tool])
+
+@main("Browse"){
+<div class="saving">
+</div>
+<div class="container">
+	<div class="row">
+		<div class="list-group categories col-lg-2 col-md-2 col-sm-1">
+		 	<span class="list-group-item">Categories <span class="glyphicon glyphicon-plus"></span></span> 
+			<span class="list-group-item" ><input type="checkbox" name="category" value="powerTools">Drills </span>
+			<span class="list-group-item" ><input type="checkbox" name="category" value="powerTools">Wrenches </span>
+			<span class="list-group-item" ><input type="checkbox" name="category" value="powerTools">Hammers </span>
+			<span class="list-group-item" ><input type="checkbox" name="category" value="powerTools">Screwdrivers</span>
+		</div>
+	     <!-- 
+			Will be list in loops of exsiting categories
+	 		-->
+	 	<div class="items-list col-lg-10 col-md-10 col-sm-11">
+	 		@for(g <- tools) {
+	 		<div class="item col-lg-3 col-md-3">
+	 			<div class="thumbnail">
+					<div class="caption">
+	 					<div style="height:150px, width=150px"></div>
+			 			<h3><a href="@routes.Tools.eachTool(g.id)">@g.name</a></h3>
+			 			<span>Owner: <a href="#">@g.owner</a></span><br>
+			 			<span>Type: <a href="#">Type</a></span><br>
+			 			<span>Description: 
+			 					@g.description
+			 			</span>
+			 			<p><button class="btn btn-default">Borrow</button></p>
+			 
+	 				</div>
+	 			</div>
+			</div>
+		}
+		</div>
+	</div>
+</div>
+}

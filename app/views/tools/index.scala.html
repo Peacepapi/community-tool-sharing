@@ -1,0 +1,27 @@
+@(tools: List[Tool])
+
+@main("Tools"){
+
+    <form action="@routes.Tools.create()" method="post">
+        <label for="name">Tool Name</label>
+        <input type="text" name="name" required>
+        <label for="description">Description</label>
+        <input type="text" name="description" required>
+        <button>Add Tool</button>
+    </form>
+
+    @if(tools.isEmpty()) {
+        <h2>There are no tools available</h2>
+    } else {
+        <h2>Tool List</h2>
+        <ol>
+            @for(g <- tools) {
+                <li>@g.name</li>
+                <ul>
+                    <li>@g.owner</li>
+                    <li>@g.description</li>
+                </ul>
+            }
+        </ol>
+    }
+}
