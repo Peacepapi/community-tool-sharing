@@ -3,6 +3,13 @@
 
 # --- !Ups
 
+create table comment (
+  id                        bigserial not null,
+  body                      varchar(255),
+  datetime_posted           timestamp,
+  constraint pk_comment primary key (id))
+;
+
 create table tool (
   id                        bigserial not null,
   name                      varchar(255),
@@ -23,6 +30,7 @@ create table users (
   username                  varchar(255),
   email                     varchar(255),
   password_hash             varchar(255),
+  constraint uq_users_username unique (username),
   constraint pk_users primary key (id))
 ;
 
@@ -34,6 +42,8 @@ create index ix_tool_owner_2 on tool (owner_id);
 
 
 # --- !Downs
+
+drop table if exists comment cascade;
 
 drop table if exists tool cascade;
 

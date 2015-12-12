@@ -43,7 +43,9 @@ public class Application extends Controller {
         String email    = userForm.data().get("email");
         String password = userForm.data().get("password");
 
+
         Users user = Users.createNewUser(username, password, email);
+
         if (user == null) {
             flash("error", "Invalid password!");
             return redirect(routes.Application.register());

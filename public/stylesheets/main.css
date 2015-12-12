@@ -25,12 +25,12 @@ body {
 }
 
 .text-container {
-    height: 200px;
-    width: 500px;
+    width: 100%;
     padding: 25px 0 0 0;
     border-radius: 25px;
     background: white;
-}
+    max-height: 75%;
+    }
 .login-header {
     padding-top: 8px;
 }
@@ -52,4 +52,31 @@ body {
 }
 .glyphicon-wrench {
     color: white;
+}
+.saving {
+    height: 200px;
+    width: 100%;
+}
+.categories {
+    float: left;
+    border-color: red;
+}
+.items-list {
+    height: 1000px;
+    float: right;
+    background:  #ccccff;
+}
+.caption{
+    word-wrap: break-word;
+}
+.item {
+    height: 325px;
+    max-width: 325px;
+}
+.ten-left-pad{
+    padding-left:10px
+}
+.desc {
+    max-width:35%;
+    max-height: 75%;
 }
