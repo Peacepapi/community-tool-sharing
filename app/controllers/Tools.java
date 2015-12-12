@@ -8,6 +8,7 @@ import play.data.Form;
 import play.mvc.*;
 import play.mvc.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,9 +24,14 @@ public class Tools extends Controller {
 
 
     public Result index() {
-        List<Tool> tools = null;
-//        tools = Tool.find.all();
-        return ok(views.html.browse.render(tools));
+        String userId = session("user_id");
+        if (userId == null) {
+            List<Tool> tools = null;
+            tools = Tool.find.all();
+            return ok(views.html.browse.render(tools));
+        } else {
+            return ownedTools(Long.parseLong(userId));
+        }
     }
 
     public Result getToolByUserId(Long user_id) {
@@ -34,10 +40,10 @@ public class Tools extends Controller {
     }
 
     @Security.Authenticated(UserAuth.class)
-    public Result ownedTools() {
-        List<Tool> tools = null;
-        if (session("user_id") != null) {
-            Long user_id = Long.parseLong(session("user_id"));
+    public Result ownedTools(Long user_id) {
+        List<Tool> tools = new ArrayList<>();
+        String currentUserID = session("user_id");
+        if (currentUserID != null && Long.parseLong(currentUserID) == user_id) {
             tools = Tool.find.query().where("owner_id="+user_id).findList();
         }
         return ok(views.html.tools.ownedTools.render(tools));

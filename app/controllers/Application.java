@@ -44,16 +44,12 @@ public class Application extends Controller {
 
 
         Users user = Users.createNewUser(username, password);
-<<<<<<< HEAD
-        if (user == null) {
-            flash("error", "Invalid password!");
-=======
+
         if (user.username == null) {
             flash("error","Username already exist!");
             return redirect(routes.Application.register());
         } else if (user.password_hash == null) {
             flash ("error", "Password is invalid!");
->>>>>>> b767c8ea90da08393938e92edd9c611d4a577d10
             return redirect(routes.Application.register());
         }
 

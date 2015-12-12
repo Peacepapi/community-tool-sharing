@@ -1,16 +1,17 @@
 <div class="container">
-    <a href="@routes.Application.index()" class="navbar-brand navbar-left" style="color:white">CTS</a>
+    <a href="@routes.Application.index()" class="navbar-brand navbar-left" style="color:black">CTS</a>
 
     @*******************
     * Check session if user is logged in *
     *******************@
+
+    <form action="@routes.Tools.index()" method="get">
+        <button>Tools</button>
+    </form>
+
     @if(session.containsKey("user_id")){
 
-    <div class="nav navbar-right"> 
-
-        <form action="@routes.Tools.index()" method="get">
-            <button>Tools</button>
-         </form>
+    <div class="nav navbar-right">
 
         Hello @Users.find.byId(Long.parseLong(session.get("user_id"))).username 
 

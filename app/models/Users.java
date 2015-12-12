@@ -34,11 +34,6 @@ public class Users extends Model {
 
     public static Model.Finder<Long, Users> find = new Finder<Long, Users>(Users.class);
 
-<<<<<<< HEAD
-    public static Model.Finder<Long, Users> find = new Model.Finder<Long, Users>(Users.class);
-=======
->>>>>>> b767c8ea90da08393938e92edd9c611d4a577d10
-
     public boolean authenticate(String password) {
         return BCrypt.checkpw(password, this.password_hash);
     }

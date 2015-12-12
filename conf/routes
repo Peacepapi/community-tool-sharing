@@ -10,7 +10,7 @@ POST    /login                      controllers.Application.login()
 GET     /logout                     controllers.Application.logout()
 GET     /browse                     controllers.Tools.index()
 
-GET     /tools                      controllers.Tools.ownedTools()
+GET     /tools                      controllers.Tools.ownedTools(user_id: Long)
 GET     /tools/:user_id             controllers.Tools.getToolByUserId(user_id: Long)
 POST    /tools                      controllers.Tools.create()
 #POST    /tools/:id,requestCode      controllers.Tools.borrowOrDelete(id: Long, requestCode: Int)
