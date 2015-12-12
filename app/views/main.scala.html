@@ -12,6 +12,54 @@
         <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
     </head>
     <body>
+<<<<<<< HEAD
+=======
+        <form action="@routes.Application.index()" method="get">
+            <button>Home</button>
+        </form>
+
+        @*******************
+        * Check session if user is logged in *
+        *******************@
+        @if(session.containsKey("user_id") && Users.find.byId(Long.parseLong(session.get("user_id"))) != null ){
+            <p>Hello, @Users.find.byId(Long.parseLong(session.get("user_id"))).username </p>
+            <form action="@routes.Application.logout()" method="get">
+                <button>Log out</button>
+            </form>
+        } else {
+            <form action="@routes.Application.login()" method="post">
+                <label for="username">Username</label>
+                <input type="text" name="username" required>
+                <label for="description">Password</label>
+                <input type="password" name="password" required>
+                <button>Login</button>
+            </form>
+            <form action="@routes.Application.onSignUpClick()" method="get">
+                <button>Sign up!</button>
+            </form>
+            <br>
+        }
+        <form action="@routes.Tools.create()" method="post">
+            <label for="name">Tool Name</label>
+            <input type="text" name="name" required>
+            <label for="description">Description</label>
+            <input type="text" name="description" required>
+            <button>Add Tool</button>
+        </form>
+        <br>
+        <form action="@routes.Tools.index()" method="get">
+            <button>Tools</button>
+        </form>
+
+
+        @if(flash.containsKey("success")) {
+            @*<p>Success!:</p>*@
+            @flash.get("success")
+        } else { @if(flash.containsKey("error")) {
+            @*<p>Error!:</p>*@
+            @flash.get("error")
+        }}
+>>>>>>> b767c8ea90da08393938e92edd9c611d4a577d10
 
         @header()
         @content

@@ -7,9 +7,19 @@
 
         <link rel="stylesheet" href="@routes.Assets.versioned("lib/bootstrap/css/bootstrap.min.css")">
 
+<<<<<<< HEAD
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
         
     </head>
+=======
+        <form action="@routes.Application.register()" method="post">
+            <label for="username">Username</label>
+            <input type="text" name="username" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" required>
+            <button>Register</button>
+        </form>
+>>>>>>> b767c8ea90da08393938e92edd9c611d4a577d10
 
     <body>
         <div class="container">
