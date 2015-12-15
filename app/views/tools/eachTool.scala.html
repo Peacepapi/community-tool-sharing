@@ -4,10 +4,15 @@
 	<div class="jumbotron index-main caption">
         <div class="text-container">
             <h2 class="ten-left-pad">@tool.name</h2>
-            <h4 class="ten-left-pad">Owner: @tool.owner</h4>
+            <h4 class="ten-left-pad">Owner: @tool.owner.username</h4>
             <h4 class="ten-left-pad"> Descripion: </h4>
             <p class="text-center desc">@tool.description</p> 
     	</div>
+        @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(tool.owner.id)) {
+            <form action="@routes.Tools.remove(tool.id)" method="post">
+                <button class="btn btn-caution">Delete</button>
+            </form>
+        }
     </div>
 	
 }

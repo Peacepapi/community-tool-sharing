@@ -7,6 +7,7 @@
         <input type="text" name="name" required>
         <label for="description">Description</label>
         <input type="text" name="description" required>
+        <label for="type">Type</label>
         <button>Add Tool</button>
     </form>
 
@@ -28,7 +29,7 @@
                     <td>@t.description</td>
                     <td>
                         @if(session.containsKey("user_id")) {
-                            <form action="@routes.Tools.delete(t.id)" method="post">
+                            <form action="@routes.Tools.remove(t.id)" method="post">
                                 <button>Delete</button>
                             </form>
                         }

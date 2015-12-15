@@ -1,39 +1,80 @@
 @(tools: List[Tool])
 
+
+@defining(ToolType.find.where().orderBy("name").findList()) { toolTypeList=>
 @main("Browse"){
+
 <div class="saving">
+    <form action="@routes.Tools.create()" method="post">
+        <label for="name">Tool Name</label>
+        <input type="text" name="name" required>
+        <label for="description">Description</label>
+        <input type="text" name="description" required>
+        <button>Add Tool</button>
+		    <select name="type_id">
+				<option value="">Select type</option>
+				@for(t <- toolTypeList){
+					<option value="@t.id">@t.name</option>
+                }
+			</select>
+    </form>
+	@if(session.containsKey("privilege") && (session.get("privilege") == "Administrator")){
+		<form action="@routes.ToolTypes.create()" method="post">
+			<label for="name">Type Name</label>
+			<input type="text" name="name" required>
+            <button>Add Type</button>
+		</form>
+	}
+	@if(flash.containsKey("success")) {
+	@*<p>Success!:</p>*@
+	<p class="text-center success">@flash.get("success")</p>
+	} else { @if(flash.containsKey("error")) {
+	@*<p>Error!:</p>*@
+	<p class="text-center error">@flash.get("error")</p>
+	}}
 </div>
 <div class="container">
 	<div class="row">
 		<div class="list-group categories col-lg-2 col-md-2 col-sm-1">
 		 	<span class="list-group-item">Categories <span class="glyphicon glyphicon-plus"></span></span> 
+			@for(t <- toolTypeList) {
+				<span class="list-group-item" ><input type="checkbox" name="category" value="powerTools">@t.name</span>
+			}
+@*
 			<span class="list-group-item" ><input type="checkbox" name="category" value="powerTools">Drills </span>
 			<span class="list-group-item" ><input type="checkbox" name="category" value="powerTools">Wrenches </span>
 			<span class="list-group-item" ><input type="checkbox" name="category" value="powerTools">Hammers </span>
 			<span class="list-group-item" ><input type="checkbox" name="category" value="powerTools">Screwdrivers</span>
+*@
 		</div>
 	     <!-- 
 			Will be list in loops of exsiting categories
 	 		-->
 	 	<div class="items-list col-lg-10 col-md-10 col-sm-11">
-	 		@for(g <- tools) {
-	 		<div class="item col-lg-3 col-md-3">
-	 			<div class="thumbnail">
-					<div class="caption">
-	 					<div style="height:150px, width=150px"></div>
-			 			<h3><a href="@routes.Tools.eachTool(g.id)">@g.name</a></h3>
-			 			<span>Owner: <a href="#">@g.owner</a></span><br>
-			 			<span>Type: <a href="#">Type</a></span><br>
-			 			<span>Description: 
-			 					@g.description
-			 			</span>
-			 			<p><button class="btn btn-default">Borrow</button></p>
-			 
-	 				</div>
-	 			</div>
-			</div>
-		}
+			@if(tools != null) {
+                @for(g <- tools) {
+					<div class="item col-lg-3 col-md-3">
+						<div class="thumbnail">
+							<div class="caption">
+								<div style="height:150px, width=150px"></div>
+								<h3><a href="@routes.Tools.eachTool(g.id)">@g.name</a></h3>
+								<span>Owner: <a href="@routes.Tools.getToolByUser(g.owner.id)">@g.owner.username</a></span><br>
+								<span>Type: <a href="@routes.Tools.getToolByType(g.toolType.id)">@g.toolType.name</a></span><br>
+								<span>Description: @g.description</span>
+								<p><button class="btn btn-default">Borrow</button>
+                                    @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(g.owner.id)) {
+                                        <form action="@routes.Tools.remove(g.id)" method="post">
+                                            <button class="btn btn-caution" >Delete</button>
+                                        </form>
+                                    }
+                                </p>
+							</div>
+						</div>
+					</div>
+				}
+			}
 		</div>
 	</div>
 </div>
+}
 }

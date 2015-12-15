@@ -38,6 +38,10 @@ body {
     background: black;
     color: white;
 }
+.btn-caution {
+    background: red;
+    color: white;
+}
 .user-drop {
     padding-top: 8px;
 }

@@ -28,7 +28,7 @@
             <td>@t.description</td>
             <td>
                 @if(session.containsKey("user_id")) {
-                <form action="@routes.Tools.delete(t.id)" method="post">
+                <form action="@routes.Tools.remove(t.id)" method="post">
                     <button>Delete</button>
                 </form>
                 }

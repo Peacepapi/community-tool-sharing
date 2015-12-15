@@ -14,7 +14,6 @@ import java.util.List;
 
 
 public class cUsers extends Controller {
-
     @Security.Authenticated(UserAuth.class)
     public Result profile() {
         Users user = Users.find.byId(Long.parseLong(session("user_id")));

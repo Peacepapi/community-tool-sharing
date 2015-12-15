@@ -13,7 +13,7 @@ public class UserAuth extends Security.Authenticator {
     @Override
     public String getUsername(final Http.Context context) {
         String userId = context.session().get("user_id");
-        if (userId == null) return null;
+        if (userId == null || userId.isEmpty()) return null;
 
         Users user = Users.find.byId(Long.parseLong(userId));
         return (user != null ? user.id.toString() : null);

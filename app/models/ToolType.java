@@ -3,10 +3,7 @@ package models;
 import com.avaje.ebean.Model;
 import play.data.validation.Constraints;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.util.List;
 
 
@@ -20,11 +17,23 @@ public class ToolType extends Model {
     public Long id;
 
     @Constraints.Required
+    @Column(unique = true)
     public String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "toolType")
     public List<Tool> toolList;
 
     public static Finder<Long, ToolType> find = new Finder<Long, ToolType>(ToolType.class);
+
+    public static ToolType createNewToolType(String name){
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+
+        ToolType toolType = new ToolType();
+        toolType.name = name;
+
+        return toolType;
+    }
 
 }

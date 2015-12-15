@@ -13,9 +13,9 @@
                 Hello,
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">@Users.find.byId(Long.parseLong(session.get("user_id"))).username
                 <span class="caret"></span>
-            </button> 
+            </button>
             <ul class="dropdown-menu">
-                <li><a href="@routes.Tools.index()">Add Tools</a></li>
+                <li><a href="@routes.Tools.browse()">Add Tools</a></li>
                 <li><a href="@routes.Application.logout()">Log out</a></li>
             </ul>
         </div>
