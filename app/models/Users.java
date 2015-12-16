@@ -4,7 +4,6 @@ import com.avaje.ebean.Model;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
-import javax.annotation.Nonnull;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,9 +81,9 @@ public class Users extends Model {
     }
 
 /*
-    public void sendRequestNotification(@Nonnull BorrowRequest borrowRequest) {
+    public void sendRequestNotification(@Nonnull BorrowRequest BorrowRequest) {
         RequestNotification requestNotification = ;
-        if (!notifications.contains(borrowRequest)) {
+        if (!notifications.contains(BorrowRequest)) {
 
         }
     }
