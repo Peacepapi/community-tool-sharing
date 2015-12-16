@@ -2,21 +2,16 @@ package controllers;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.annotation.Transactional;
-import models.BorrowRequest;
 import models.Tool;
 import models.ToolType;
 import models.Users;
 import play.data.DynamicForm;
 import play.mvc.*;
 import play.mvc.Controller;
-import scala.concurrent.java8.FuturesConvertersImpl;
 
-import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
-
-import views.html.*;
 
 import static play.data.Form.form;
 
