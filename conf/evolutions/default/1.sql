@@ -3,13 +3,16 @@
 
 # --- !Ups
 
-create table borrow_request (
+create table borrow_requests (
   id                        bigserial not null,
+  owner_id                  bigint,
+  message                   varchar(255),
+  timestamp                 timestamp,
   requester_id              bigint,
   requested_tool_id         bigint,
   request_time              timestamp,
-  constraint uq_borrow_request_1 unique (requester_id,requested_tool_id),
-  constraint pk_borrow_request primary key (id))
+  constraint uq_borrow_requests_1 unique (requester_id,requested_tool_id),
+  constraint pk_borrow_requests primary key (id))
 ;
 
 create table comment (
@@ -80,36 +83,38 @@ create table users (
   constraint pk_users primary key (id))
 ;
 
-alter table borrow_request add constraint fk_borrow_request_requester_1 foreign key (requester_id) references users (id);
-create index ix_borrow_request_requester_1 on borrow_request (requester_id);
-alter table borrow_request add constraint fk_borrow_request_requestedToo_2 foreign key (requested_tool_id) references tool (id);
-create index ix_borrow_request_requestedToo_2 on borrow_request (requested_tool_id);
-alter table comment add constraint fk_comment_poster_3 foreign key (poster_id) references users (id);
-create index ix_comment_poster_3 on comment (poster_id);
-alter table comment add constraint fk_comment_tool_4 foreign key (tool_id) references tool (id);
-create index ix_comment_tool_4 on comment (tool_id);
-alter table notification add constraint fk_notification_owner_5 foreign key (owner_id) references users (id);
-create index ix_notification_owner_5 on notification (owner_id);
-alter table profile add constraint fk_profile_user_6 foreign key (user_id) references users (id);
-create index ix_profile_user_6 on profile (user_id);
-alter table request_notification add constraint fk_request_notification_owner_7 foreign key (owner_id) references users (id);
-create index ix_request_notification_owner_7 on request_notification (owner_id);
-alter table request_notification add constraint fk_request_notification_reques_8 foreign key (request_id) references borrow_request (id);
-create index ix_request_notification_reques_8 on request_notification (request_id);
-alter table tool add constraint fk_tool_owner_9 foreign key (owner_id) references users (id);
-create index ix_tool_owner_9 on tool (owner_id);
-alter table tool add constraint fk_tool_toolType_10 foreign key (tool_type_id) references tool_type (id);
-create index ix_tool_toolType_10 on tool (tool_type_id);
-alter table tool add constraint fk_tool_borrower_11 foreign key (borrower_id) references users (id);
-create index ix_tool_borrower_11 on tool (borrower_id);
-alter table users add constraint fk_users_userProfile_12 foreign key (user_profile_id) references profile (id);
-create index ix_users_userProfile_12 on users (user_profile_id);
+alter table borrow_requests add constraint fk_borrow_requests_owner_1 foreign key (owner_id) references users (id);
+create index ix_borrow_requests_owner_1 on borrow_requests (owner_id);
+alter table borrow_requests add constraint fk_borrow_requests_requester_2 foreign key (requester_id) references users (id);
+create index ix_borrow_requests_requester_2 on borrow_requests (requester_id);
+alter table borrow_requests add constraint fk_borrow_requests_requestedTo_3 foreign key (requested_tool_id) references tool (id);
+create index ix_borrow_requests_requestedTo_3 on borrow_requests (requested_tool_id);
+alter table comment add constraint fk_comment_poster_4 foreign key (poster_id) references users (id);
+create index ix_comment_poster_4 on comment (poster_id);
+alter table comment add constraint fk_comment_tool_5 foreign key (tool_id) references tool (id);
+create index ix_comment_tool_5 on comment (tool_id);
+alter table notification add constraint fk_notification_owner_6 foreign key (owner_id) references users (id);
+create index ix_notification_owner_6 on notification (owner_id);
+alter table profile add constraint fk_profile_user_7 foreign key (user_id) references users (id);
+create index ix_profile_user_7 on profile (user_id);
+alter table request_notification add constraint fk_request_notification_owner_8 foreign key (owner_id) references users (id);
+create index ix_request_notification_owner_8 on request_notification (owner_id);
+alter table request_notification add constraint fk_request_notification_reques_9 foreign key (request_id) references borrow_requests (id);
+create index ix_request_notification_reques_9 on request_notification (request_id);
+alter table tool add constraint fk_tool_owner_10 foreign key (owner_id) references users (id);
+create index ix_tool_owner_10 on tool (owner_id);
+alter table tool add constraint fk_tool_toolType_11 foreign key (tool_type_id) references tool_type (id);
+create index ix_tool_toolType_11 on tool (tool_type_id);
+alter table tool add constraint fk_tool_borrower_12 foreign key (borrower_id) references users (id);
+create index ix_tool_borrower_12 on tool (borrower_id);
+alter table users add constraint fk_users_userProfile_13 foreign key (user_profile_id) references profile (id);
+create index ix_users_userProfile_13 on users (user_profile_id);
 
 
 
 # --- !Downs
 
-drop table if exists borrow_request cascade;
+drop table if exists borrow_requests cascade;
 
 drop table if exists comment cascade;
 

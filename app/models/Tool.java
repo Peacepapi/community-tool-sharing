@@ -38,7 +38,7 @@ public class Tool extends Model {
     @OneToMany(mappedBy = "tool", cascade = CascadeType.ALL)
     public List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "requestedTool")
+    @OneToMany(mappedBy = "requestedTool", cascade = CascadeType.ALL)
     public List<BorrowRequests> requestList = new ArrayList<>();
 
     public static Finder<Long, Tool> find = new Finder<Long, Tool>(Tool.class);
@@ -52,4 +52,5 @@ public class Tool extends Model {
         tool.toolType = toolType;
         return tool;
     }
+
 }

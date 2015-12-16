@@ -42,10 +42,13 @@ body {
     background: red;
     color: white;
 }
+.btn-accept {
+    background: #00CC66;
+    color: white;
+}
 .user-drop {
     padding-top: 8px;
 }
-
 .center-block {
   display: block;
   margin-left: auto;

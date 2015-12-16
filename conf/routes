@@ -19,13 +19,15 @@ POST    /tools                      controllers.Tools.create()
 DELETE  /tools/:id                  controllers.Tools.remove(id: Long)
 POST    /tools/:id                  controllers.Tools.remove(id: Long)
 POST    /tools/request/:tool_id     controllers.Tools.requestBorrow(tool_id: Long)
+POST    /tools/lend/:tool_id/:user_id        controllers.Tools.lendTool(tool_id: Long, user_id: Long)
 
 GET		/tools/browse			    controllers.Tools.browse()
 GET		/tools/info/:id 			controllers.Tools.eachTool(id: Long)
 GET     /tools/byOwner/:user_id     controllers.Tools.getToolByUser(user_id: Long)
-GET     /tools/byType/=:type_id     controllers.Tools.getToolByType(type_id: Long)
+GET     /tools/byType/:type_id      controllers.Tools.getToolByType(type_id: Long)
 
-#GET     /users/profile/:user_id     controllers.cUsers.profile();
+GET     /users/profile              controllers.cUsers.myProfile()
+GET     /users/profile/:user_id     controllers.cUsers.profile(user_id: Long)
 
 POST    /toolTypes                  controllers.ToolTypes.create()
 

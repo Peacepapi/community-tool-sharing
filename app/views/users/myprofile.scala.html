@@ -1,32 +1,38 @@
-@(profile: Profile, tools: List[Tool])
+@(user: Users, profile: Profile, myTools: List[Tool])
 
-@main(profile.user.username) {
+@main(user.username) {
 
-    <p>
-        @profile.user.username;
-
-    </p>
+<table style="width:100%" border="1">
+    <tr>
+        <td>Tool Name</td>
+        <td>Description</td>
+    </tr>
+    @for(t <- user.borrowingList) {
+    <tr>
+        <td>@t.name</td>
+        <td>@t.description</td>
+        <td><form>
+            <button>Return</button>
+        </form></td>
+    </tr>
+    }
+</table><br><br>
 
     <div class="items-list col-lg-10 col-md-10 col-sm-11">
-        @for(g <- tools) {
+        @for(g <- myTools) {
         <div class="item col-lg-3 col-md-3">
             <div class="thumbnail">
                 <div class="caption">
                     <div style="height:150px, width=150px"></div>
-                    <h3><a href="@routes.Tools.eachTool(g.id)">@g.name</a></h3>
-                    <span>Owner: <a href="@routes.Tools.getToolByUser(g.owner.id)">@g.owner.username</a></span><br>
+                    <h3><a href="@routes.Tools.eachTool(g.id)">@g.name @if(g.requestList != null && !g.requestList.isEmpty()){
+                        (!requested)
+                        }</a></h3>
                     <span>Type: <a href="@routes.Tools.getToolByType(g.toolType.id)">@g.toolType.name</a></span><br>
                     <span>Description: @g.description</span>
                     <p>
-                        @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(g.owner.id) ){
                     <form action="@routes.Tools.remove(g.id)" method="post">
                         <button class="btn btn-caution" >Delete</button>
                     </form>
-                    } else {
-                    <form action="@routes.Tools.requestBorrow(g.id)" method="post">
-                        <button class="btn btn-default">Borrow</button>
-                    </form>
-                    }
                     </p>
                 </div>
             </div>

@@ -4,6 +4,7 @@
 	<div class="jumbotron index-main caption">
         <div class="text-container">
             <h2 class="ten-left-pad">@tool.name</h2>
+            <h4 class="ten-left-pad">Type: @tool.toolType.name</h4>
             <h4 class="ten-left-pad">Owner: @tool.owner.username</h4>
             <h4 class="ten-left-pad"> Descripion: </h4>
             <p class="text-center desc">@tool.description</p> 
@@ -11,7 +12,19 @@
         @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(tool.owner.id)) {
             <form action="@routes.Tools.remove(tool.id)" method="post">
                 <button class="btn btn-caution">Delete</button>
-            </form>
+            </form><br>
+            @for(r <- tool.requestList){
+                <div class="item">
+                    <form action="@routes.Tools.lendTool(r.requestedTool.id, r.requester.id)" method="post">
+                        <label>Requester: @r.requester.username</label>
+                        <button class="btn btn-accept">Lend</button>
+                    </form>
+
+                    <form >
+                        <button class="btn btn-caution">Reject</button>
+                    </form>
+                </div>
+            }
         }
     </div>
 	

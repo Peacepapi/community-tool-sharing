@@ -46,6 +46,11 @@ public class Users extends Model {
     @OneToMany(mappedBy = "borrower")
     public List<Tool> borrowingList;
 
+/*
+    @ManyToMany
+    public List<Tool> requestedTools;
+*/
+
     @Constraints.Required
     public String userType = "Normal";
 
