@@ -8,8 +8,9 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * Created by Mike on 12/15/2015.
+ * Created by Mike on 12/16/2015.
  */
+
 @Entity
 @UniqueConstraint(columnNames = {"requester_id","requested_tool_id"})
 public class BorrowRequest extends Model {
