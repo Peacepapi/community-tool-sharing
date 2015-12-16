@@ -2,6 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.annotation.Transactional;
+import models.BorrowRequest;
 import models.Tool;
 import models.ToolType;
 import models.Users;
