@@ -20,10 +20,12 @@ DELETE  /tools/:id                  controllers.Tools.remove(id: Long)
 POST    /tools/:id                  controllers.Tools.remove(id: Long)
 POST    /tools/request/:tool_id     controllers.Tools.requestBorrow(tool_id: Long)
 
-GET		/browse						controllers.Tools.browse()
-GET		/tool/info/:id 			    controllers.Tools.eachTool(id: Long)
-GET     /tool/byOwner/:user_id      controllers.Tools.getToolByUser(user_id: Long)
-GET     /tool/byType/=:type_id      controllers.Tools.getToolByType(type_id: Long)
+GET		/tools/browse			    controllers.Tools.browse()
+GET		/tools/info/:id 			controllers.Tools.eachTool(id: Long)
+GET     /tools/byOwner/:user_id     controllers.Tools.getToolByUser(user_id: Long)
+GET     /tools/byType/=:type_id     controllers.Tools.getToolByType(type_id: Long)
+
+#GET     /users/profile/:user_id     controllers.cUsers.profile();
 
 POST    /toolTypes                  controllers.ToolTypes.create()
 

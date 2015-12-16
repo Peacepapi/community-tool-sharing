@@ -3,6 +3,15 @@
 
 # --- !Ups
 
+create table borrow_request (
+  id                        bigserial not null,
+  requester_id              bigint,
+  requested_tool_id         bigint,
+  request_time              timestamp,
+  constraint uq_borrow_request_1 unique (requester_id,requested_tool_id),
+  constraint pk_borrow_request primary key (id))
+;
+
 create table comment (
   id                        bigserial not null,
   body                      varchar(255),
@@ -10,6 +19,14 @@ create table comment (
   tool_id                   bigint,
   datetime_posted           timestamp,
   constraint pk_comment primary key (id))
+;
+
+create table notification (
+  id                        bigserial not null,
+  owner_id                  bigint,
+  message                   varchar(255),
+  timestamp                 timestamp,
+  constraint pk_notification primary key (id))
 ;
 
 create table profile (
@@ -21,6 +38,17 @@ create table profile (
   constraint pk_profile primary key (id))
 ;
 
+create table request_notification (
+  dtype                     varchar(10) not null,
+  id                        bigserial not null,
+  owner_id                  bigint,
+  message                   varchar(255),
+  timestamp                 timestamp,
+  request_id                bigint,
+  constraint uq_request_notification_request_ unique (request_id),
+  constraint pk_request_notification primary key (id))
+;
+
 create table tool (
   id                        bigserial not null,
   name                      varchar(255),
@@ -28,7 +56,6 @@ create table tool (
   description               varchar(255),
   tool_type_id              bigint,
   borrower_id               bigint,
-  borrowing_status          integer,
   constraint pk_tool primary key (id))
 ;
 
@@ -46,7 +73,6 @@ create table users (
   password_hash             varchar(255),
   user_profile_id           bigint,
   user_type                 varchar(255),
-  login_ip                  varchar(255),
   constraint uq_users_username unique (username),
   constraint uq_users_email unique (email),
   constraint uq_users_user_profile_id unique (user_profile_id),
@@ -54,42 +80,46 @@ create table users (
   constraint pk_users primary key (id))
 ;
 
+alter table borrow_request add constraint fk_borrow_request_requester_1 foreign key (requester_id) references users (id);
+create index ix_borrow_request_requester_1 on borrow_request (requester_id);
+alter table borrow_request add constraint fk_borrow_request_requestedToo_2 foreign key (requested_tool_id) references tool (id);
+create index ix_borrow_request_requestedToo_2 on borrow_request (requested_tool_id);
+alter table comment add constraint fk_comment_poster_3 foreign key (poster_id) references users (id);
+create index ix_comment_poster_3 on comment (poster_id);
+alter table comment add constraint fk_comment_tool_4 foreign key (tool_id) references tool (id);
+create index ix_comment_tool_4 on comment (tool_id);
+alter table notification add constraint fk_notification_owner_5 foreign key (owner_id) references users (id);
+create index ix_notification_owner_5 on notification (owner_id);
+alter table profile add constraint fk_profile_user_6 foreign key (user_id) references users (id);
+create index ix_profile_user_6 on profile (user_id);
+alter table request_notification add constraint fk_request_notification_owner_7 foreign key (owner_id) references users (id);
+create index ix_request_notification_owner_7 on request_notification (owner_id);
+alter table request_notification add constraint fk_request_notification_reques_8 foreign key (request_id) references borrow_request (id);
+create index ix_request_notification_reques_8 on request_notification (request_id);
+alter table tool add constraint fk_tool_owner_9 foreign key (owner_id) references users (id);
+create index ix_tool_owner_9 on tool (owner_id);
+alter table tool add constraint fk_tool_toolType_10 foreign key (tool_type_id) references tool_type (id);
+create index ix_tool_toolType_10 on tool (tool_type_id);
+alter table tool add constraint fk_tool_borrower_11 foreign key (borrower_id) references users (id);
+create index ix_tool_borrower_11 on tool (borrower_id);
+alter table users add constraint fk_users_userProfile_12 foreign key (user_profile_id) references profile (id);
+create index ix_users_userProfile_12 on users (user_profile_id);
 
-create table tool_users (
-  tool_id                        bigint not null,
-  users_id                       bigint not null,
-  constraint pk_tool_users primary key (tool_id, users_id))
-;
-alter table comment add constraint fk_comment_poster_1 foreign key (poster_id) references users (id);
-create index ix_comment_poster_1 on comment (poster_id);
-alter table comment add constraint fk_comment_tool_2 foreign key (tool_id) references tool (id);
-create index ix_comment_tool_2 on comment (tool_id);
-alter table profile add constraint fk_profile_user_3 foreign key (user_id) references users (id);
-create index ix_profile_user_3 on profile (user_id);
-alter table tool add constraint fk_tool_owner_4 foreign key (owner_id) references users (id);
-create index ix_tool_owner_4 on tool (owner_id);
-alter table tool add constraint fk_tool_toolType_5 foreign key (tool_type_id) references tool_type (id);
-create index ix_tool_toolType_5 on tool (tool_type_id);
-alter table tool add constraint fk_tool_borrower_6 foreign key (borrower_id) references users (id);
-create index ix_tool_borrower_6 on tool (borrower_id);
-alter table users add constraint fk_users_userProfile_7 foreign key (user_profile_id) references profile (id);
-create index ix_users_userProfile_7 on users (user_profile_id);
 
-
-
-alter table tool_users add constraint fk_tool_users_tool_01 foreign key (tool_id) references tool (id);
-
-alter table tool_users add constraint fk_tool_users_users_02 foreign key (users_id) references users (id);
 
 # --- !Downs
 
+drop table if exists borrow_request cascade;
+
 drop table if exists comment cascade;
+
+drop table if exists notification cascade;
 
 drop table if exists profile cascade;
 
-drop table if exists tool cascade;
+drop table if exists request_notification cascade;
 
-drop table if exists tool_users cascade;
+drop table if exists tool cascade;
 
 drop table if exists tool_type cascade;
 

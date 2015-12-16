@@ -4,6 +4,7 @@ import com.avaje.ebean.Model;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
+import javax.annotation.Nonnull;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,13 +50,16 @@ public class Users extends Model {
     @Constraints.Required
     public String userType = "Normal";
 
-    public String loginIP = null;
+//    public String loginIP = null;
 
     @OneToMany(mappedBy = "poster")
     public List<Comment> comments;
 
-    @ManyToMany(mappedBy = "requesterList")
-    public List<Tool> requestedTools = new ArrayList<>();
+    @OneToMany(mappedBy = "requester")
+    public List<BorrowRequest> requestList;
+
+    @OneToMany(mappedBy = "owner")
+    public List<RequestNotification> notifications = new ArrayList<>();
 
     public static Model.Finder<Long, Users> find = new Model.Finder<Long, Users>(Users.class);
 
@@ -77,13 +81,18 @@ public class Users extends Model {
         return user;
     }
 
+/*
+    public void sendRequestNotification(@Nonnull BorrowRequest borrowRequest) {
+        RequestNotification requestNotification = ;
+        if (!notifications.contains(borrowRequest)) {
+
+        }
+    }
+*/
+
     @PreRemove
     private void preRemove() {
         //do some clean up here
-        //request self from request list
-        for (Tool requested : requestedTools) {
-            requested.requesterList.remove(this);
-        }
         //more cleanUp to come
     }
 

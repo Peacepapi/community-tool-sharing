@@ -6,7 +6,7 @@
     * Check session if user is logged in *
     *******************@
 
-    @if(session.containsKey("loginIP") && session.get("loginIP").equals(request.remoteAddress) ){
+    @if(session.containsKey("username")){
 
     <div class="nav navbar-right"> 
         <div class="dropdown user-drop">
@@ -17,6 +17,7 @@
             <ul class="dropdown-menu">
                 <li><a href="@routes.Tools.browse()">Add Tools</a></li>
                 <li><a href="@routes.Application.logout()">Log out</a></li>
+                <li><a href="#">Profile</a></li>
             </ul>
         </div>
     </div>

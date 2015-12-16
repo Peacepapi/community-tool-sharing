@@ -24,12 +24,14 @@ public class UserAuth extends Security.Authenticator {
             return null;
         }
 
+/*
         String loginIP = context.request().remoteAddress();
         if (!user.loginIP.equals(loginIP)) {
             Http.Context.current().session().clear();
             user.loginIP = loginIP;
             return null;
         }
+*/
         return user.id.toString();
     }
 

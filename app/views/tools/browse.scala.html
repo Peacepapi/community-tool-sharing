@@ -61,12 +61,16 @@
 								<span>Owner: <a href="@routes.Tools.getToolByUser(g.owner.id)">@g.owner.username</a></span><br>
 								<span>Type: <a href="@routes.Tools.getToolByType(g.toolType.id)">@g.toolType.name</a></span><br>
 								<span>Description: @g.description</span>
-								<p><button class="btn btn-default">Borrow</button>
-                                    @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(g.owner.id)) {
-                                        <form action="@routes.Tools.remove(g.id)" method="post">
-                                            <button class="btn btn-caution" >Delete</button>
-                                        </form>
-                                    }
+								<p>
+                                    @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(g.owner.id) ){
+										<form action="@routes.Tools.remove(g.id)" method="post">
+											<button class="btn btn-caution" >Delete</button>
+										</form>
+									} else {
+										<form action="@routes.Tools.requestBorrow(g.id)" method="post">
+											<button class="btn btn-default">Borrow</button>
+										</form>
+									}
                                 </p>
 							</div>
 						</div>

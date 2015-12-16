@@ -22,11 +22,13 @@ public class Application extends Controller {
         Users user = Users.find.where().eq("username", username).findUnique();
 
         if (user != null && user.authenticate(password)) {
-            user.loginIP = request().remoteAddress();
-            user.update();
+//            user.loginIP = request().remoteAddress();
             session("user_id", user.id.toString());
             session("username", user.username);
-            session("loginIP", user.loginIP);
+            if (user.userType.equals("Administrator")) {
+                session("privilege","Administrator");
+            }
+//            session("loginIP", user.loginIP);
             flash("success", "Welcome back " + user.username);
         } else {
             flash ("error", "The username and password combination did not match our records. Please Try again");
@@ -68,19 +70,17 @@ public class Application extends Controller {
             return redirect(routes.Application.register());
         }
 
-        user.save();/*
-        Profile profile = Profile.createNewProfile(user);
-        profile.save();
-        user.userProfile = profile;
-        user.update();*/
+        user.save();
 
+/*
         user.loginIP = request().remoteAddress();
         user.update();
+*/
 
         flash("success", "Welcome to the community " + user.username);
         session("user_id", user.id.toString());
         session("username", user.username);
-        session("loginIP", user.loginIP);
+//        session("loginIP", user.loginIP);
 
         return redirect(routes.Application.index());
     }
@@ -88,10 +88,11 @@ public class Application extends Controller {
     public Result logout() {
         if (session().containsKey("user_id")) {
             Users user = Users.find.byId(Long.parseLong(session("user_id")));
-            user.loginIP = null;
+//            user.loginIP = null;
             session().remove("user_id");
             session().remove("username");
-            session().remove("loginIP");
+            session().remove("privilege");
+//            session().remove("loginIP");
             flash("success", "Log out successful.");
         }
 

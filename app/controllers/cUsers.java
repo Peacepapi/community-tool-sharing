@@ -18,6 +18,6 @@ public class cUsers extends Controller {
     public Result profile() {
         Users user = Users.find.byId(Long.parseLong(session("user_id")));
         List<Tool> tools = Tool.find.query().where("owner_id="+user.id).findList();
-        return ok(views.html.users.profile.render(user, tools));
+        return ok(views.html.users.profile.render(user, user.userProfile));
     }
 }

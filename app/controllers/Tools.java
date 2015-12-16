@@ -1,17 +1,22 @@
 package controllers;
 
-import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.annotation.Transactional;
+import models.BorrowRequest;
 import models.Tool;
 import models.ToolType;
 import models.Users;
 import play.data.DynamicForm;
 import play.mvc.*;
 import play.mvc.Controller;
+import scala.concurrent.java8.FuturesConvertersImpl;
 
+import javax.persistence.OptimisticLockException;
+import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
+import views.html.*;
 
 import static play.data.Form.form;
 
@@ -103,17 +108,27 @@ public class Tools extends Controller {
         Tool tool = Tool.find.byId(id);
         if (tool == null) {
             flash("error", "The requested tool does not exist!");
-            //handle error here!
-            return redirect(routes.Tools.browse());
+            return notFound("No such tool listed");
         }
 
-        if ( tool.owner.id.equals(Long.parseLong(session("user_id"))) ) {
+        Users user = Users.find.byId(Long.parseLong(session("user_id")));
+        if ( tool.owner.id.equals(user.id) ) {
             flash("error","You cannot borrow your own tool!");
             return redirect(routes.Tools.browse());
+        } else if (tool.requestList.contains(user)) {
+            return badRequest(views.html.errors.badrequest.render("You already quested the tool"));
+        } else if (user.borrowingList.contains(tool)) {
+            return badRequest(views.html.errors.badrequest.render("The tool is already in your possesion"));
         }
 
-//        if (requestBorrow())
-
+        BorrowRequest request = BorrowRequest.createNewBorrowRequest(user, tool);
+        try {
+            request.save();
+            flash("success", "Your request has been sent");
+        } catch (PersistenceException e) {
+            flash("error", "Could not borrow the tool, please try again later.");
+            return badRequest(views.html.errors.badrequest.render("You have already requested for the tool!"));
+        }
         return redirect(routes.Tools.browse());
     }
 
@@ -138,13 +153,22 @@ public class Tools extends Controller {
 
     public Result browse() {
         //fetch all tools
-        return ok(views.html.tools.browse.render(Tool.find.orderBy("toolType.name").findList()));
+        List<Tool> toolList;
+        if (session().containsKey("user_id")) {
+            long user_id = Long.parseLong(session("user_id"));
+            toolList = Tool.find.where().or(Expr.eq("borrower_id",null),Expr.ne("borrower_id", user_id)).orderBy("name").findList();
+        } else {
+            toolList = Tool.find.orderBy("toolType.name").findList();
+        }
+        return ok(views.html.tools.browse.render(toolList));
+
+//        return ok(views.html.tools.browse.render(Tool.find.orderBy("toolType.name").findList()));
     }
 
     public Result eachTool(long id) {
         Tool tool = Tool.find.byId(id);
-        if(tool == null) 
-            return notFound("No such tool listed");
+        if(tool == null)
+            return notFound(views.html.errors.notfound.render("The tool you are looking for does not exist."));
         else
         return ok(views.html.tools.eachTool.render(tool));
     }
