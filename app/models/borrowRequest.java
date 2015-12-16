@@ -18,6 +18,16 @@ public class BorrowRequest extends Model {
     @Id
     public long id;
 
+    @Constraints.Required
+    @ManyToOne
+    public Users owner;
+
+    @Constraints.Required
+    public String message;
+
+    @Constraints.Required
+    public Timestamp timestamp;
+
     @ManyToOne
     @Constraints.Required
     public Users requester;
