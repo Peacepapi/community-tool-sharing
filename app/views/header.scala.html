@@ -6,12 +6,12 @@
     * Check session if user is logged in *
     *******************@
 
-    @if(session.containsKey("user_id")){
+    @if(session.containsKey("loginIP") && session.get("loginIP").equals(request.remoteAddress) ){
 
     <div class="nav navbar-right"> 
         <div class="dropdown user-drop">
                 Hello,
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">@Users.find.byId(Long.parseLong(session.get("user_id"))).username
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">@session.get("username")
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">

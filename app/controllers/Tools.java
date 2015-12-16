@@ -117,45 +117,6 @@ public class Tools extends Controller {
         return redirect(routes.Tools.browse());
     }
 
-    @Security.Authenticated(UserAuth.class)
-    @Transactional
-    public Result requestReturn(Long id) {
-        Tool tool = Tool.find.byId(id);
-        Users user = Users.find.byId(Long.parseLong(session("user_id")));
-        if (tool == null) {
-            flash("error", "The tool being requested does not exist");
-            return redirect(routes.Tools.browse());
-        } else if (tool.borrower != user) {
-            flash("error", "You are not the borrower of this tool");
-            return redirect(routes.Tools.browse());
-        } else if (tool.borrowingStatus != Tool.STATUS_BORROWED) {
-            flash("error", "Tool cannot currently be returned. Currently request needs to be canceled");
-            return redirect(routes.Tools.browse());
-        }
-        tool.borrowingStatus = Tool.STATUS_PENDING_RETURN;
-        flash("success","Request to borrow has been sent!");
-        return redirect(routes.Tools.eachTool(tool.id));
-    }
-
-    @Security.Authenticated(UserAuth.class)
-    @Transactional
-    public Result lendTool(Long id) {
-        Tool tool = Tool.find.byId(id);
-        Users user = Users.find.byId(Long.parseLong(session("user_id")));
-        if (tool == null) {
-            flash("error", "The tool being requested does not exist");
-            return redirect(routes.Tools.browse());
-        } else if (tool.borrower != user) {
-            flash("error", "You are not the borrower of this tool");
-            return redirect(routes.Tools.browse());
-        } else if (tool.borrowingStatus != Tool.STATUS_PENDING_BORROW) {
-            flash("error", "There is no request to borrow this tool");
-            return redirect(routes.Tools.browse());
-        }
-        tool.borrowingStatus = Tool.STATUS_PENDING_RETURN;
-        flash("success","Request to borrow has been sent!");
-        return redirect(routes.Tools.eachTool(tool.id));
-    }
 
     @Security.Authenticated(UserAuth.class)
     public Result remove(Long id) {

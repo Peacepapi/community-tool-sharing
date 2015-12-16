@@ -46,6 +46,7 @@ create table users (
   password_hash             varchar(255),
   user_profile_id           bigint,
   user_type                 varchar(255),
+  login_ip                  varchar(255),
   constraint uq_users_username unique (username),
   constraint uq_users_email unique (email),
   constraint uq_users_user_profile_id unique (user_profile_id),
@@ -53,6 +54,12 @@ create table users (
   constraint pk_users primary key (id))
 ;
 
+
+create table tool_users (
+  tool_id                        bigint not null,
+  users_id                       bigint not null,
+  constraint pk_tool_users primary key (tool_id, users_id))
+;
 alter table comment add constraint fk_comment_poster_1 foreign key (poster_id) references users (id);
 create index ix_comment_poster_1 on comment (poster_id);
 alter table comment add constraint fk_comment_tool_2 foreign key (tool_id) references tool (id);
@@ -70,6 +77,10 @@ create index ix_users_userProfile_7 on users (user_profile_id);
 
 
 
+alter table tool_users add constraint fk_tool_users_tool_01 foreign key (tool_id) references tool (id);
+
+alter table tool_users add constraint fk_tool_users_users_02 foreign key (users_id) references users (id);
+
 # --- !Downs
 
 drop table if exists comment cascade;
@@ -77,6 +88,8 @@ drop table if exists comment cascade;
 drop table if exists profile cascade;
 
 drop table if exists tool cascade;
+
+drop table if exists tool_users cascade;
 
 drop table if exists tool_type cascade;
 

@@ -16,7 +16,7 @@ public class Profile extends Model {
     @Id
     public Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @Constraints.Required
     @Column(unique=true)
     public Users user;
@@ -30,11 +30,7 @@ public class Profile extends Model {
 
     public static Profile createNewProfile(@Nonnull Users poster) {
         Profile nProfile = new Profile();
-
         nProfile.user = poster;
-
-        nProfile.save();
-
         return nProfile;
     }
 }
