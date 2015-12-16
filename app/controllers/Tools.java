@@ -107,37 +107,31 @@ public class Tools extends Controller {
     }
 
     @Security.Authenticated(UserAuth.class)
+    @Transactional
     public Result requestBorrow(Long id) {
 
         Users user = Users.find.byId(Long.parseLong(session("user_id")));
-        Ebean.beginTransaction();
         Tool tool = Tool.find.byId(id);
         if (tool == null) {
-            Ebean.endTransaction();
             flash("error", "The requested tool does not exist!");
             return notFound("No such tool listed");
         }
 
         if ( tool.owner.id.equals(user.id) ) {
-            Ebean.endTransaction();
             flash("error","You cannot borrow your own tool!");
             return redirect(routes.Tools.browse());
         } else if (user.borrowingList.contains(tool)) {
-            Ebean.endTransaction();
             return badRequest(views.html.errors.badrequest.render("The tool is already in your possession"));
         }
         BorrowRequests request = BorrowRequests.createNewBorrowRequest(user, tool);
         try {
             request.save();
-            Ebean.endTransaction();
             flash("success", "Your request has been sent");
         } catch (PersistenceException e) {
-            Ebean.endTransaction();
             flash("error","You already requested the tool");
             return redirect(routes.Tools.browse());
 //            return badRequest(views.html.errors.badrequest.render("You have already requested for the tool!"));
         }
-        Ebean.endTransaction();
         return redirect(routes.Tools.browse());
     }
 
@@ -150,8 +144,6 @@ public class Tools extends Controller {
                     Expr.eq("requester_id", requester_id),
                     Expr.eq("requested_tool_id",tool_id))
                 .findUnique();
-
-
 
         if(borrowRequests == null) {
             return notFound(views.html.errors.notfound.render("The request you are looking for does not exist!"));
