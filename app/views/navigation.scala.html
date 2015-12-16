@@ -1,0 +1,30 @@
+@defining(ToolType.find.where().orderBy("name").findList()) { toolTypeList=>
+
+<div class="text-center" style="width=100%;background:black">
+	<div class="btn-group" role="group" aria-label="...">
+		<a class="btn" href="@routes.Application.index()">
+			<button type="button" class="btn btn-default">Home</button>
+		</a>
+ 		<a class="btn" href="@routes.cUsers.profile()">
+ 			<button type="button" class="btn btn-default">Your Profile</button>
+ 		</a>
+
+	 	<a class="btn" href="@routes.Tools.browse()">
+	  		<button type="button" class="btn btn-default">Browse</button>
+	 	</a>
+	 	<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+	 		<button type="button" class="btn btn-default">
+	  			Categories <span class="caret"></span>
+	  		</button>
+	  	</a>
+	  		<ul class="dropdown-menu">
+	  			@for(t <- toolTypeList) {
+               		<li class ="list-group-item"><a href="@routes.Tools.getToolByType(t.id)">@t.name</a></li>
+            	}
+        	</ul>
+	  	<a class="btn" href="#">
+	  		<button type="button" class="btn btn-default">FAQ</button>
+	  	</a>	
+	</div>
+</div>
+}

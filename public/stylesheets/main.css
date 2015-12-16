@@ -5,6 +5,11 @@ body {
 .navbar-brand {
     color: black;
 }
+.main-color {
+    background: #2980b9; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #2980b9 , #2c3e50); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #2980b9 , #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+}
 .error {
 	color: red;
 }
@@ -12,30 +17,33 @@ body {
 	color: green;
 }
 .index-main {
-	height: 600px;
+    vertical-align: baseline;
+	min-height: 600px;
     max-width:100%;
-    max-height:75%;
-    overflow:hidden;
-    background: #fceabb; /* Old browsers */
-    background: -moz-linear-gradient(top, #fceabb 0%, #fccd4d 38%, #fbdf93 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, #fceabb 0%,#fccd4d 38%,#fbdf93 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, #fceabb 0%,#fccd4d 38%,#fbdf93 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fceabb', endColorstr='#fbdf93',GradientType=0 ); /* IE6-9 */
-
+    max-height:100%;
+    padding-top: 15px;
+    background: #2980b9; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #2980b9 , #2c3e50); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #2980b9 , #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
 }
 
 .text-container {
-    width: 100%;
+    width: 70%;
     padding: 25px 0 0 0;
     border-radius: 25px;
     background: white;
-    max-height: 75%;
+    height: 70%;
+    max-height: 100%;
     }
 .login-header {
     padding-top: 8px;
 }
 .btn {
     background: black;
+    color: white;
+}
+.btn-caution {
+    background: red;
     color: white;
 }
 .user-drop {
@@ -53,18 +61,12 @@ body {
 .glyphicon-wrench {
     color: white;
 }
-.saving {
-    height: 200px;
-    width: 100%;
-}
 .categories {
     float: left;
-    border-color: red;
 }
 .items-list {
-    height: 1000px;
+    height: 100%;
     float: right;
-    background:  #ccccff;
 }
 .caption{
     word-wrap: break-word;
@@ -79,4 +81,35 @@ body {
 .desc {
     max-width:35%;
     max-height: 75%;
+}
+.browse-des {
+    height: 120px;
+    overflow: hidden;
+}
+.thumbnail {
+    height: 300px;
+    max-height: 300px;
+}
+.comment {
+    height: 300px;
+    width: 100%;
+}
+.round-egde {
+    border-radius: 25px;
+}
+.comment-section {
+
+    padding-top: 15px;
+    background: #2980b9; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #2980b9 , #2c3e50); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #2980b9 , #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+}
+.poster {
+    overflow: auto;
+    color: white;
+    background: transparent;
+    border: 5px solid white;
+}
+.add-tool {
+    
 }

@@ -4,10 +4,39 @@
 	<div class="jumbotron index-main caption">
         <div class="text-container">
             <h2 class="ten-left-pad">@tool.name</h2>
-            <h4 class="ten-left-pad">Owner: @tool.owner</h4>
+            <h4 class="ten-left-pad">Owner: <a href="@routes.Tools.getToolByUser(tool.owner.id)">@tool.owner.username</a></h4>
             <h4 class="ten-left-pad"> Descripion: </h4>
             <p class="text-center desc">@tool.description</p> 
-    	</div>
+        @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(tool.owner.id)) {
+            <form action="@routes.Tools.remove(tool.id)" method="post">
+                <button class="btn btn-caution">Delete</button>
+            </form>
+        } else {
+            <form action="@routes.Tools.requestBorrow(tool.id)" method="post">
+                <button class="btn btn-default">Borrow</button>
+            </form>
+    }
+        </div>
     </div>
+    <div class="jumbotron index-main" style="max-height:100%">
+        <div class="text-center round-egde">
+            <form action="@routes.Comments.postComment(tool.id)" method="post">
+                <input class="comment" placeholder="Write a comment" name="body" required>
+                <button class="btn btn-default">Post</button>
+            </form>
+        </div>
+        
+        @for(c <- tool.comments) {
+        <div class="col-lg-12 comment-section ">
+            <div class="row vertical-align">
+                <div class="col-lg-3 col-md-3 round-egde poster">
+                    <h4>@c.poster.username</h4>
+                    <p style="font-size:1em;">@c.datetime_posted</p>
+                </div>
+                <div class="col-lg-9 col-md-9 round-egde poster" style="height:150px">@c.body</div>
+            </div>
+        </div>
+        }
+    </div> 
 	
 }

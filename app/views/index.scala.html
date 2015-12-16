@@ -2,27 +2,31 @@
 
 @main(title) {
 
-    <div class="jumbotron index-main">
+    <div class="container-fluid index-main">
 
-        <div class="text-container center-block">
-            <h2 class="text-center">CTS</h2>
-            <p class="text-center">Borrow tools instead of buying!<br>
-           	Share tools with other users! 
-            </p> 
-            <form action="@routes.Tools.browse()" method="get">
-                <button class="btn btn-default center-block">
-                 Browse<span class="glyphicon glyphicon-wrench"></span>
-            </button>            
-            </form>
-    	</div>
+        <div class="">
 
+            <div class="text-container center-block">
+                <h2 class="text-center">CTS</h2>
+                <p class="text-center">Borrow tools instead of buying!<br>
+                Share tools with other users! 
+                </p> 
+                <form action="@routes.Tools.browse()" method="get">
+                    <button class="btn btn-default center-block">
+                     Browse<span class="glyphicon glyphicon-wrench"></span>
+                </button>            
+                </form>
 
-        @if(flash.containsKey("success")) {
-            @*<p>Success!:</p>*@
-            <p class="text-center success">@flash.get("success")</p>
-        } else { @if(flash.containsKey("error")) {
-            @*<p>Error!:</p>*@
-            <p class="text-center error">@flash.get("error")</p>
-        }}
+                @if(flash.containsKey("success")) {
+                    @*<p>Success!:</p>*@
+                    <p class="text-center alert alert-success">@flash.get("success")</p>
+                } else { @if(flash.containsKey("error")) {
+                    @*<p>Error!:</p>*@
+                    <p class="text-center alert alert-danger">@flash.get("error")</p>
+                }}
+
+            </div>
+        </div>
+        
     </div>
 }

@@ -1,0 +1,74 @@
+@(user: Users, tools: List[Tool])
+
+@defining(ToolType.find.where().orderBy("name").findList()) { toolTypeList=>
+@main(user.username) {
+
+<div class="add-tool text-center">
+    <form action="@routes.Tools.create()" method="post">
+        <label for="name">Tool Name</label>
+        <input type="text" name="name" required>
+        <label for="description">Description</label>
+        <input type="text" name="description" required>
+        <button class="btn btn-default">Add Tool</button>
+            <select name="type_id">
+                <option value="">Select type</option>
+                @for(t <- toolTypeList){
+                    <option value="@t.id">@t.name</option>
+                }
+            </select>
+    </form>
+    @if(session.containsKey("privilege") && (session.get("privilege") == "Administrator")){
+        <form action="@routes.ToolTypes.create()" method="post">
+            <label for="name">Type Name</label>
+            <input type="text" name="name" required>
+            <button>Add Type</button>
+        </form>
+    }
+    @if(flash.containsKey("success")) {
+    @*<p>Success!:</p>*@
+    <p class="text-center alert alert-success">@flash.get("success")</p>
+    } else { @if(flash.containsKey("error")) {
+    @*<p>Error!:</p>*@
+    <p class="text-center alert alert-danger">@flash.get("error")</p>
+    }}
+
+
+</div>
+@if( tools == null || tools.isEmpty() ) {
+    <h2>You have not added any tools</h2>
+} else {
+    <div class="main-color text-center" style="color:white">
+        <h2>@user.username's Tool List</h2>
+    </div>
+<div class="container">
+    <table class="table table-hover" style="width:100%">
+        <tr>
+            <td><strong>ID</strong></td>
+            <td><strong>Name</strong></td>
+            <td><strong>Description</strong></td>
+            <td><strong>Option</strong></td>
+        </tr>
+        @for(t <- tools) {
+            <tr>
+                <td>@t.id</td>
+                <td>@t.name</td>
+                <td>@t.description</td>
+                <td> 
+                    @if(session.containsKey("user_id")) {
+                    <form action="@routes.Tools.remove(t.id)" method="post">
+                        <button class="btn btn-caution">Delete</button>
+                    </form>
+                    }</td>
+                </tr>
+            }
+        </table>
+        <div class="main-color text-center" style="color:white">
+            <h2>@user.username's borrowed tools</h2>
+        </div>
+        <!-- 
+            tables of borrowed tools go here
+    -->
+    }
+</div>
+}
+}
