@@ -16,14 +16,14 @@ public class RequestNotification extends Notification {
 
     @Constraints.Required
     @OneToOne
-    public BorrowRequest request;
+    public BorrowRequests request;
 
     public static Model.Finder<Long, RequestNotification> find =
             new Finder<Long, RequestNotification>(RequestNotification.class);
 
     public static RequestNotification createNewRequestNotification(
             @Nonnull Users owner,
-            @Nonnull BorrowRequest request) {
+            @Nonnull BorrowRequests request) {
         RequestNotification notification = new RequestNotification();
         notification.owner = owner;
         return notification;

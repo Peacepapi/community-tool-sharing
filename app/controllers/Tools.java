@@ -2,7 +2,7 @@ package controllers;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.annotation.Transactional;
-import models.BorrowRequest;
+import models.BorrowRequests;
 import models.Tool;
 import models.ToolType;
 import models.Users;
@@ -117,7 +117,7 @@ public class Tools extends Controller {
             return badRequest(views.html.errors.badrequest.render("The tool is already in your possesion"));
         }
 
-        BorrowRequest request = BorrowRequest.createNewBorrowRequest(user, tool);
+        BorrowRequests request = BorrowRequests.createNewBorrowRequest(user, tool);
         try {
             request.save();
             flash("success", "Your request has been sent");

@@ -39,7 +39,7 @@ public class Tool extends Model {
     public List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "requestedTool")
-    public List<BorrowRequest> requestList = new ArrayList<>();
+    public List<BorrowRequests> requestList = new ArrayList<>();
 
     public static Finder<Long, Tool> find = new Finder<Long, Tool>(Tool.class);
 

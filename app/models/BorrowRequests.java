@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 
 @Entity
 @UniqueConstraint(columnNames = {"requester_id","requested_tool_id"})
-public class BorrowRequest extends Model {
+public class BorrowRequests extends Model {
 
     @Id
     public long id;
@@ -42,14 +42,14 @@ public class BorrowRequest extends Model {
     @OneToOne(mappedBy = "request")
     public RequestNotification notification;
 
-    public static Model.Finder<Long, BorrowRequest> find = new Finder<Long, BorrowRequest>(BorrowRequest.class);
+    public static Model.Finder<Long, BorrowRequests> find = new Finder<Long, BorrowRequests>(BorrowRequests.class);
 
-    public static BorrowRequest createNewBorrowRequest(@Nonnull Users requester, @Nonnull Tool requestedTool) {
-        BorrowRequest borrowRequest = new BorrowRequest();
-        borrowRequest.requester = requester;
-        borrowRequest.requestedTool = requestedTool;
-        borrowRequest.requestTime = new Timestamp(System.currentTimeMillis());
-        return borrowRequest;
+    public static BorrowRequests createNewBorrowRequest(@Nonnull Users requester, @Nonnull Tool requestedTool) {
+        BorrowRequests borrowRequests = new BorrowRequests();
+        borrowRequests.requester = requester;
+        borrowRequests.requestedTool = requestedTool;
+        borrowRequests.requestTime = new Timestamp(System.currentTimeMillis());
+        return borrowRequests;
     }
 
     @PostPersist

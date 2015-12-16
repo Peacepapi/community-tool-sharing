@@ -55,7 +55,7 @@ public class Users extends Model {
     public List<Comment> comments;
 
     @OneToMany(mappedBy = "requester")
-    public List<BorrowRequest> requestList;
+    public List<BorrowRequests> requestList;
 
     @OneToMany(mappedBy = "owner")
     public List<RequestNotification> notifications = new ArrayList<>();
@@ -81,9 +81,9 @@ public class Users extends Model {
     }
 
 /*
-    public void sendRequestNotification(@Nonnull BorrowRequest BorrowRequest) {
+    public void sendRequestNotification(@Nonnull BorrowRequests BorrowRequests) {
         RequestNotification requestNotification = ;
-        if (!notifications.contains(BorrowRequest)) {
+        if (!notifications.contains(BorrowRequests)) {
 
         }
     }
