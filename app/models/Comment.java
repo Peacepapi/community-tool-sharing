@@ -1,5 +1,6 @@
 package models;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import com.avaje.ebean.Model;
 import play.data.validation.Constraints;

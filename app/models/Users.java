@@ -5,13 +5,10 @@ import com.avaje.ebean.Model;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
-import javax.annotation.Nonnull;
 import javax.persistence.*;
-import java.beans.Expression;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.Constraint;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -50,11 +47,18 @@ public class Users extends Model {
     @OneToMany(mappedBy = "borrower")
     public List<Tool> borrowingList;
 
+    @Constraints.Required
     public String userType = "Normal";
+
 
     @OneToMany(mappedBy = "poster")
     public List<Comment> comments;
 
+    @OneToMany(mappedBy = "requester")
+    public List<BorrowRequests> requestList;
+
+    @OneToMany(mappedBy = "owner")
+    public List<RequestNotification> notifications = new ArrayList<>();
 
     public static Model.Finder<Long, Users> find = new Model.Finder<Long, Users>(Users.class);
 
@@ -68,28 +72,25 @@ public class Users extends Model {
             return null;
         }
 
-        Users user = Users.find.where().or(Expr.eq("username", username), Expr.eq("email", email)).findUnique();
-
-        if ( user != null ) {
-            if (user.username.equals(username)) {
-                // username is taken
-                return new Users();
-            } else {
-                // email is taken
-                user = new Users();
-                user.username = username;
-                return user;
-            }
-        }
-        user = new Users();
+        Users user = new Users();
         user.username = username;
         user.email = email;
         user.password_hash = BCrypt.hashpw(password, BCrypt.gensalt());
 
-        user.save();
-
-        user.userProfile = Profile.createNewProfile(user);
-
         return user;
+    }
+
+    @PreRemove
+    private void preRemove() {
+        //do some clean up here
+        //more cleanUp to come
+    }
+
+    @PostPersist
+    private void postPersist() {
+        Profile profile = Profile.createNewProfile(this);
+        profile.save();
+        this.userProfile = profile;
+        this.update();
     }
 }

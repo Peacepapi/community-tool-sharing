@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.avaje.ebean.annotation.Transactional;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Entity
 public class ToolType extends Model {
+
     @Id
     public Long id;
 
@@ -20,10 +22,19 @@ public class ToolType extends Model {
     @Column(unique = true)
     public String name;
 
-    @OneToMany(mappedBy = "toolType")
+    @OneToMany(mappedBy = "toolType", cascade = CascadeType.ALL)
     public List<Tool> toolList;
 
-    public static Model.Finder<Long, ToolType> find = new Model.Finder<Long, ToolType>(ToolType.class);
+    @PreRemove
+    @Transactional
+    private void preRemove(){
+        ToolType miscType = ToolType.find.where().eq("name", "Misc").findUnique();
+        for (Tool tool : toolList) {
+            tool.toolType = miscType;
+        }
+    }
+
+    public static Model.Finder<Long, ToolType> find = new Finder<Long, ToolType>(ToolType.class);
 
     public static ToolType createNewToolType(String name){
         if (name == null || name.isEmpty()) {

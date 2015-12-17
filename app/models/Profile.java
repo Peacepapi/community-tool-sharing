@@ -30,11 +30,7 @@ public class Profile extends Model {
 
     public static Profile createNewProfile(@Nonnull Users poster) {
         Profile nProfile = new Profile();
-
         nProfile.user = poster;
-
-        nProfile.save();
-
         return nProfile;
     }
 }

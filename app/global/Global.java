@@ -8,9 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import play.Application;
 import play.GlobalSettings;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Mike on 12/13/2015.
@@ -39,11 +37,10 @@ public class Global extends GlobalSettings {
             admin.save();
         }
         if (Users.find.where().eq("username", "exampleUser").findUnique() == null) {
-            Users dummpyUser = new Users();
-            dummpyUser.username = "exampleUser";
-            dummpyUser.password_hash = BCrypt.hashpw("password", BCrypt.gensalt());
-            dummpyUser.save();
-
+            Users dummyUser = new Users();
+            dummyUser.username = "exampleUser";
+            dummyUser.password_hash = BCrypt.hashpw("password", BCrypt.gensalt());
+            dummyUser.save();
         }
     }
     private void addDefaultToolTypes() {

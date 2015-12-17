@@ -1,7 +1,9 @@
 package controllers;
 
 import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Expr;
 import com.avaje.ebean.annotation.Transactional;
+import models.BorrowRequests;
 import models.Tool;
 import models.ToolType;
 import models.Users;
@@ -9,9 +11,9 @@ import play.data.DynamicForm;
 import play.mvc.*;
 import play.mvc.Controller;
 
+import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 import static play.data.Form.form;
 
@@ -25,12 +27,7 @@ public class Tools extends Controller {
 
 
     public Result index() {
-        String userId = session("user_id");
-        if (userId == null) {
-            return ok(views.html.tools.browse.render(Tool.find.all()));
-        } else {
-            return ownedTools(Long.parseLong(userId));
-        }
+        return ok(views.html.tools.browse.render(Tool.find.all()));
     }
 
     public Result getToolByUser(Long user_id) {
@@ -43,21 +40,19 @@ public class Tools extends Controller {
     }
 
     @Security.Authenticated(UserAuth.class)
-    public Result ownedTools(Long user_id) {
-        List<Tool> tools = new ArrayList<>();
-        String currentUserID = session("user_id");
-        if (currentUserID != null && Long.parseLong(currentUserID) == user_id) {
-            tools = Tool.find.query().where("owner_id="+user_id).findList();
-        }
-        return ok(views.html.tools.ownedTools.render(tools));
-    }
-
-    @Security.Authenticated(UserAuth.class)
     public Result create() {
         DynamicForm toolForm = form().bindFromRequest();
         String toolName = toolForm.data().get("name");
+        if(toolName.isEmpty()) {
+            flash("error", "Missing name!");
+            return redirect(routes.Tools.browse());
+        }
         String toolDesc = toolForm.data().get("description");
         String typeId = toolForm.data().get("type_id");
+        if(typeId.isEmpty()) {
+            flash("error", "Please select a type!");
+            return redirect(routes.Tools.browse());
+        }
 
         Users user = Users.find.byId(Long.parseLong(session("user_id")));
         ToolType toolType = ToolType.find.byId(Long.parseLong(typeId));
@@ -81,17 +76,6 @@ public class Tools extends Controller {
                 flash("success", tool.name + " added!");
             }
         }
-        /*
-        Form<Tool> form = Form.form(Tool.class).bindFromRequest();
-        if (form.hasErrors()) {
-            flash("error", "Missing fields!");
-        } else {
-            Tool tool = form.get();
-            tool.owner = Users.find.byId(Long.parseLong(session("user_id")));
-            tool.save();
-            flash("success", "Saved new Tool: " + tool.name);
-        }
-        */
 
         return redirect(routes.Tools.browse());
     }
@@ -100,61 +84,57 @@ public class Tools extends Controller {
     @Transactional
     public Result requestBorrow(Long id) {
 
+        Users user = Users.find.byId(Long.parseLong(session("user_id")));
         Tool tool = Tool.find.byId(id);
         if (tool == null) {
             flash("error", "The requested tool does not exist!");
-            //handle error here!
-            return redirect(routes.Tools.browse());
+            return notFound("No such tool listed");
         }
 
-        if ( tool.owner.id.equals(Long.parseLong(session("user_id"))) ) {
+        if ( tool.owner.id.equals(user.id) ) {
             flash("error","You cannot borrow your own tool!");
             return redirect(routes.Tools.browse());
+        } else if (user.borrowingList.contains(tool)) {
+            return badRequest(views.html.errors.badrequest.render("The tool is already in your possession"));
         }
-
-//        if (requestBorrow())
-
+        BorrowRequests request = BorrowRequests.createNewBorrowRequest(user, tool);
+        try {
+            request.save();
+            flash("success", "Your request has been sent");
+        } catch (PersistenceException e) {
+            flash("error","You already requested the tool");
+            return redirect(routes.Tools.browse());
+//            return badRequest(views.html.errors.badrequest.render("You have already requested for the tool!"));
+        }
         return redirect(routes.Tools.browse());
     }
 
     @Security.Authenticated(UserAuth.class)
     @Transactional
-    public Result requestReturn(Long id) {
-        Tool tool = Tool.find.byId(id);
-        Users user = Users.find.byId(Long.parseLong(session("user_id")));
-        if (tool == null) {
-            flash("error", "The tool being requested does not exist");
-            return redirect(routes.Tools.browse());
-        } else if (tool.borrower != user) {
-            flash("error", "You are not the borrower of this tool");
-            return redirect(routes.Tools.browse());
-        } else if (tool.borrowingStatus != Tool.STATUS_BORROWED) {
-            flash("error", "Tool cannot currently be returned. Currently request needs to be canceled");
-            return redirect(routes.Tools.browse());
-        }
-        tool.borrowingStatus = Tool.STATUS_PENDING_RETURN;
-        flash("success","Request to borrow has been sent!");
-        return redirect(routes.Tools.eachTool(tool.id));
-    }
+    public Result lendTool(long tool_id, long requester_id){
 
-    @Security.Authenticated(UserAuth.class)
-    @Transactional
-    public Result lendTool(Long id) {
-        Tool tool = Tool.find.byId(id);
-        Users user = Users.find.byId(Long.parseLong(session("user_id")));
-        if (tool == null) {
-            flash("error", "The tool being requested does not exist");
-            return redirect(routes.Tools.browse());
-        } else if (tool.borrower != user) {
-            flash("error", "You are not the borrower of this tool");
-            return redirect(routes.Tools.browse());
-        } else if (tool.borrowingStatus != Tool.STATUS_PENDING_BORROW) {
-            flash("error", "There is no request to borrow this tool");
-            return redirect(routes.Tools.browse());
+        BorrowRequests borrowRequests = BorrowRequests.find.where()
+                .and(
+                    Expr.eq("requester_id", requester_id),
+                    Expr.eq("requested_tool_id",tool_id))
+                .findUnique();
+
+        if(borrowRequests == null) {
+            return notFound(views.html.errors.notfound.render("The request you are looking for does not exist!"));
         }
-        tool.borrowingStatus = Tool.STATUS_PENDING_RETURN;
-        flash("success","Request to borrow has been sent!");
-        return redirect(routes.Tools.eachTool(tool.id));
+        Tool tool = borrowRequests.requestedTool;
+        long currentUser_id = Long.parseLong(session("user_id"));
+        if (tool.owner.id != currentUser_id) {
+            return badRequest(views.html.errors.badrequest.render("You're not the own of the requested tool!"));
+        }
+
+        Users borrower = borrowRequests.requester;
+        tool.borrower = borrower;
+        //borrower.borrowingList.add(tool);
+        tool.requestList.clear();
+        tool.update();
+        flash("success","Tool has been lend to " + borrower.username);
+        return eachTool(tool_id);
     }
 
     @Security.Authenticated(UserAuth.class)
@@ -177,13 +157,25 @@ public class Tools extends Controller {
 
     public Result browse() {
         //fetch all tools
-        return ok(views.html.tools.browse.render(Tool.find.orderBy("toolType.name").findList()));
+        List<Tool> toolList;
+        if (session().containsKey("user_id")) {
+            long user_id = Long.parseLong(session("user_id"));
+            toolList = Tool.find
+                    .where()
+                    .and(Expr.ne("owner_id", user_id),
+                            Expr.eq("borrower_id",null) )
+                    .orderBy("name").findList();
+        } else {
+            toolList = Tool.find.orderBy("toolType.name").findList();
+        }
+        return ok(views.html.tools.browse.render(toolList));
+
     }
 
     public Result eachTool(long id) {
         Tool tool = Tool.find.byId(id);
-        if(tool == null) 
-            return notFound("No such tool listed");
+        if(tool == null)
+            return notFound(views.html.errors.notfound.render("The tool you are looking for does not exist."));
         else
         return ok(views.html.tools.eachTool.render(tool));
     }

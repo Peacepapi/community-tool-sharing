@@ -18,6 +18,7 @@
     }
         </div>
     </div>
+
     <div class="jumbotron index-main" style="max-height:100%">
         <div class="text-center round-egde">
             <form action="@routes.Comments.postComment(tool.id)" method="post">
@@ -25,6 +26,26 @@
                 <button class="btn btn-default">Post</button>
             </form>
         </div>
+
+        @*List reuqests
+        @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(tool.owner.id)) {
+        <form action="@routes.Tools.remove(tool.id)" method="post">
+            <button class="btn btn-caution">Delete</button>
+        </form><br>
+            @for(r <- tool.requestList){
+            <div class="item">
+                <form action="@routes.Tools.lendTool(r.requestedTool.id, r.requester.id)" method="post">
+                    <label>Requester: @r.requester.username</label>
+                    <button class="btn btn-accept">Lend</button>
+                </form>
+
+                <form >
+                    <button class="btn btn-caution">Reject</button>
+                </form>
+            </div>
+            }
+        }
+        *@
         
         @for(c <- tool.comments) {
         <div class="col-lg-12 comment-section ">
