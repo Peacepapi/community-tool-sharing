@@ -15,16 +15,18 @@
                     <button class="btn btn-default">Borrow</button>
                 </form>
                 } else { @if(tool.borrower.id == Long.parseLong(session.get("user_id"))) {
-                    @if(tool.requestReturn) {
-                    <button class="btn disabled">Return pending...</button>
+                        @if(tool.requestReturn) {
+                        <button class="btn disabled">Return pending...</button>
+                        } else {
+                        <form action="@routes.Tools.requestReturn(tool.id)" method="post">
+                            <button class="btn btn-default">Return</button>
+                        </form>
+                        }
                     } else {
-                    <form action="@routes.Tools.requestReturn(tool.id)" method="post">
-                        <button class="btn btn-default">Return</button>
-                    </form>
+                        <button class="btn disabled">Loaned</button>
                     }
-            } else {
-                <button class="btn disabled">Borrow</button>
-            }}}
+                }
+            }
         } else { @if(tool.requestReturn) {
             <form action="@routes.Tools.acceptReturn(tool.id)" method="post">
                 <button class="btn btn-default">Accept Return</button>

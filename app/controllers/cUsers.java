@@ -30,11 +30,11 @@ public class cUsers extends Controller {
                 ToolType.find.orderBy("name").orderBy("name").findList()));
     }
 
-    public Result profile(long user_id){
+/*    public Result profile(long user_id){
         Users user = Users.find.byId(user_id);
         if (user == null) {
             return notFound(views.html.errors.notfound.render("The user you are looking for does not exist"));
         }
         return ok(views.html.users.profile.render(user, user.toolList));
-    }
+    }*/
 }

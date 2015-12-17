@@ -1,20 +1,6 @@
 @(tools: List[Tool], toolTypeList: List[ToolType])
 
 @main("Browse"){
-<div class="text-center">
-<form action="@routes.Tools.create()" method="post">
-    <label for="name">Tool Name</label>
-    <input type="text" name="name" required>
-    <label for="description">Description</label>
-    <input type="text" name="description" required>
-    <select name="type_id">
-        <option value="">Select type</option>
-        @for(t <- toolTypeList){
-        <option value="@t.id">@t.name</option>
-        }
-    </select>
-    <button class="btn btn-default">Add Tool</button>
-</form>
 </div>
 
 <div class="container index-main">
@@ -36,6 +22,9 @@
                         <h3><a href="@routes.Tools.eachTool(g.id)">@g.name</a></h3>
                         <span>Owner: <a href="@routes.Tools.getToolByUser(g.owner.id)">@g.owner.username</a></span><br>
                         <span>Type: <a href="@routes.Tools.getToolByType(g.toolType.id)">@g.toolType.name</a></span><br>
+                        @if(g.borrower != null) {
+                        <span>Unavailable</span><br>
+                        }
                         <div class="row-fluid">
                             <form action="@routes.Tools.eachTool(g.id)" method="get">
                                 <button class="btn btn-default pull-left span1">Check</button>

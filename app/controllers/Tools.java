@@ -1,6 +1,7 @@
 package controllers;
 
 import com.avaje.ebean.Expr;
+import com.avaje.ebean.PagedList;
 import com.avaje.ebean.annotation.Transactional;
 import com.avaje.ebean.enhance.asm.Type;
 import models.BorrowRequests;
@@ -68,6 +69,27 @@ public class Tools extends Controller {
         }
         return ok(views.html.tools.browse.render(toolList, ToolType.find.orderBy("name").findList()));
     }
+
+    /*public Result browse(int pageIndex) {
+        //fetch all tools
+        if (pageIndex < 0) pageIndex = 0;
+        int itemPerPage = 20;
+        PagedList<Tool> pagedList;
+        List<Tool> toolList = new ArrayList<>();
+        if (session().containsKey("user_id")) {
+            long user_id = Long.parseLong(session("user_id"));
+            pagedList = Ebean.find(Tool.class).where().ne("owner_id", user_id).order("id").findPagedList(pageIndex,itemPerPage);
+            if (pagedList != null) {
+                toolList = pagedList.getList();
+            }
+        } else {
+            pagedList = Ebean.find(Tool.class).where().order("id").findPagedList(pageIndex,itemPerPage);
+            if (pagedList != null) {
+                toolList = pagedList.getList();
+            }
+        }
+        return ok(views.html.tools.browse.render(toolList, ToolType.find.orderBy("name").findList()));
+    }*/
 
     @Security.Authenticated(UserAuth.class)
     public Result create() {
