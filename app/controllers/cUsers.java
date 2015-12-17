@@ -35,6 +35,6 @@ public class cUsers extends Controller {
         if (user == null) {
             return notFound(views.html.errors.notfound.render("The user you are looking for does not exist"));
         }
-        return ok(views.html.users.profile.render(user, user.toolList));
+        return redirect(routes.Tools.getToolByUser(user_id));
     }*/
 }

@@ -25,7 +25,7 @@ GET     /tools/byOwner/:user_id     controllers.Tools.getToolByUser(user_id: Lon
 GET     /tools/byType/:type_id      controllers.Tools.getToolByType(type_id: Long)
 
 GET     /users/profile              controllers.cUsers.myProfile()
-GET     /users/profile/:user_id     controllers.cUsers.profile(user_id: Long)
+#GET     /users/profile/:user_id     controllers.cUsers.profile(user_id: Long)
 
 POST    /toolTypes                  controllers.ToolTypes.create()
 
