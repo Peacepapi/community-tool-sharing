@@ -15,10 +15,19 @@
     <body>
 
         @header()
-
+@*
         @if(session.containsKey("user_id")){
             @navigation()
         }
+        *@
+
+        @if(flash.containsKey("success")) {
+                    @*<p>Success!:</p>*@
+                    <p class="text-center alert alert-success">@flash.get("success")</p>
+                } else { @if(flash.containsKey("error")) {
+                    @*<p>Error!:</p>*@
+                    <p class="text-center alert alert-danger">@flash.get("error")</p>
+                }}
 
         @content
 

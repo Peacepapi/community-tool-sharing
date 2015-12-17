@@ -1,4 +1,4 @@
-@defining(ToolType.find.where().orderBy("name").findList()) { toolTypeList=>
+@*@(toolTypeList: List[ToolType])*@
 
 <div class="text-center" style="width=100%;background:black">
 	<div class="btn-group" role="group" aria-label="...">
@@ -16,15 +16,14 @@
 	 		<button type="button" class="btn btn-default">
 	  			Categories <span class="caret"></span>
 	  		</button>
-	  	</a>
+	  	</a>@*
 	  		<ul class="dropdown-menu">
 	  			@for(t <- toolTypeList) {
                		<li class ="list-group-item"><a href="@routes.Tools.getToolByType(t.id)">@t.name</a></li>
             	}
-        	</ul>
+        	</ul>*@
 	  	<a class="btn" href="#">
 	  		<button type="button" class="btn btn-default">FAQ</button>
 	  	</a>	
 	</div>
 </div>
-}

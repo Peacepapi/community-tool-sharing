@@ -1,23 +1,128 @@
-@(user: Users, profile: Profile, myTools: List[Tool])
+@(user: Users, profile: Profile, myTools: List[Tool], borrowedTools: List[Tool],
+    requests: List[BorrowRequests], requestedTools: List[Tool], toolTypeList: List[ToolType])
 
 @main(user.username) {
+<div class="add-tool text-center">
+    <form action="@routes.Tools.create()" method="post">
+        <label for="name">Tool Name</label>
+        <input type="text" name="name" required>
+        <label for="description">Description</label>
+        <input type="text" name="description" required>
+        <button class="btn btn-default">Add Tool</button>
+        <select name="type_id">
+            <option value="">Select type</option>
+            @for(t <- toolTypeList){
+            <option value="@t.id">@t.name</option>
+            }
+        </select>
+    </form>
+    @if(session.containsKey("privilege") && (session.get("privilege") == "Administrator")){
+    <form action="@routes.ToolTypes.create()" method="post">
+        <label for="name">Type Name</label>
+        <input type="text" name="name" required>
+        <button>Add Type</button>
+    </form>
+    }
+</div>
 
+
+<h4>Owned Tools</h4>
 <table style="width:100%" border="1">
     <tr>
         <td>Tool Name</td>
         <td>Description</td>
+        <td>Request Count</td>
+        <td>Action</td>
     </tr>
-    @for(t <- user.borrowingList) {
+    @for(t <- myTools) {
     <tr>
-        <td>@t.name</td>
+        <td><a href="@routes.Tools.eachTool(t.id)">@t.name</a></td>
         <td>@t.description</td>
-        <td><form>
-            <button>Return</button>
+        <td>@if(t.requestCount > 0) {
+                <a class="btn btn-default" href="@routes.Tools.eachTool(t.id)">View Requests</a>
+            } else { @if(t.borrower != null) {
+                @if(t.requestReturn) {
+                    <form action="@routes.Tools.acceptReturn(t.id)" method="post">
+                        <button class="btn btn-default">Accept Return</button>
+                    </form>
+                } else {
+                <a href="@routes.cUsers.profile(t.borrower.id)">Borrowed</a>
+            }} else {
+                Available
+            }}
+        </td>
+        <td><form action="@routes.Tools.remove(t.id)" method="post">
+            <button class="btn btn-caution" >Delete</button>
         </form></td>
     </tr>
     }
-</table><br><br>
+</table><br>
 
+
+
+@if(borrowedTools != null) {
+<h4>Borrowed Tools</h4>
+<table style="width:100%" border="1">
+    <tr>
+        <td>Tool Name</td>
+        <td>Owner</td>
+        <td>Actions</td>
+    </tr>
+    @for(t <- borrowedTools) {
+    <tr>
+        <td><a href="@routes.Tools.eachTool(t.id)">@t.name</a></td>
+        <td>@t.owner.username</td>
+        <td>@if(t.requestReturn) {
+            <button class="btn disabled">Return pending...</button>
+            } else {
+            <form action="@routes.Tools.requestReturn(t.id)" method="post">
+                <button class="btn btn-default">Return</button>
+            </form> }
+        </td>
+    </tr>
+    }
+</table><br>
+}
+
+
+
+
+@if(requestedTools != null) {
+<h4>Tools Requested by Other Users</h4>
+<table style="width:100%" border="1">
+    <tr>
+        <td>Tool Name</td>
+        <td>Number of Request</td>
+    </tr>
+    @for(t <- requestedTools) {
+        <tr>
+            <td><a href="@routes.Tools.eachTool(t.id)">@t.name</a></td>
+            <td>@t.requestCount</td>
+        </tr>
+    }
+</table><br>
+}
+
+
+
+@if(requests != null) {
+<h4>Tools You have Requested</h4>
+<table style="width:100%" border="1">
+    <tr>
+        <td>Tool Name</td>
+        <td>Owner</td>
+    </tr>
+    @for(r <- requests) {
+        @defining(r.requestedTool) { tool =>
+        <tr>
+            <td><a href="@routes.Tools.eachTool(tool.id)">@tool.name</a></td>
+            <td><a href="@routes.Tools.getToolByUser(tool.owner.id)">@tool.owner.username</a></td>
+        </tr>
+        }
+    }
+</table><br>
+}
+@*****************
     <div class="items-list col-lg-10 col-md-10 col-sm-11">
         @for(g <- myTools) {
         <div class="item col-lg-3 col-md-3">
@@ -39,4 +144,5 @@
         </div>
         }
     </div>
+*******************@
 }

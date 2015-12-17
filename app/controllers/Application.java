@@ -82,15 +82,11 @@ public class Application extends Controller {
 
     public Result logout() {
         if (session().containsKey("user_id")) {
-            Users user = Users.find.byId(Long.parseLong(session("user_id")));
-//            user.loginIP = null;
             session().remove("user_id");
             session().remove("username");
             session().remove("privilege");
-//            session().remove("loginIP");
             flash("success", "Log out successful.");
         }
-
         return redirect(routes.Application.index());
     }
 

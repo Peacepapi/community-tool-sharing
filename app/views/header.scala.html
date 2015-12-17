@@ -1,6 +1,14 @@
-<div class="container">
+<div class="nvabar navbar-header navbar-fixed-top" style="background:#0097A7">
 
-    <a href="@routes.Application.index()" class="navbar-brand navbar-left " >CTS</a>
+    <div class="navbar-left" style="padding-left:50px">
+        <a href="@routes.Application.index()" class="navbar-brand navbar-left" >CTS</a>
+        @if(session.containsKey("username")){
+                <a class="navbar-brand" href="@routes.Application.index()">Home</a>
+                <a class="navbar-brand" href="@routes.cUsers.myProfile()">Your Profile</a>
+                <a class="navbar-brand" href="@routes.Tools.browse()">Browse</a>
+                @*<a class="navbar-brand" href="#">FAQ</a>*@
+        }
+    </div>
 
     @*******************
     * Check session if user is logged in *
@@ -8,10 +16,9 @@
 
     @if(session.containsKey("username")){
 
-    <div class="nav navbar-right"> 
+    <div class="nav navbar-right" style="padding-right:50px">
         <div class="dropdown user-drop">
-                Hello,
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">@session.get("username")
+            <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">@session.get("username")
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
@@ -20,9 +27,8 @@
             </ul>
         </div>
     </div>
-
     } else {
-    <div class="navbar-right login-header">
+    <div class="navbar-right login-header" style="padding-right:50px">
         <div class="pull-left">
             <form class="form-inline" action="@routes.Application.login()" method="post">
                 <input type="text" placeholder="Username" name="username" required>

@@ -1,12 +1,27 @@
-@(tools: List[Tool])
+@(tools: List[Tool], toolTypeList: List[ToolType])
 
-
-@defining(ToolType.find.where().orderBy("name").findList()) { toolTypeList=>
 @main("Browse"){
-<div class="container index-main round-egde">
+<div class="text-center">
+<form action="@routes.Tools.create()" method="post">
+    <label for="name">Tool Name</label>
+    <input type="text" name="name" required>
+    <label for="description">Description</label>
+    <input type="text" name="description" required>
+    <select name="type_id">
+        <option value="">Select type</option>
+        @for(t <- toolTypeList){
+        <option value="@t.id">@t.name</option>
+        }
+    </select>
+    <button class="btn btn-default">Add Tool</button>
+</form>
+</div>
+
+<div class="container index-main">
     <div class="row">
         <div class="list-group categories round-egde col-lg-2 col-md-2 col-sm-1" style="padding-left:10px">
             <span class="list-group-item text-center">Categories <span class="glyphicon glyphicon-plus"></span></span>
+            <span class="list-group-item text-center" ><a href="@routes.Tools.browse()">All</a></span>
             @for(t <- toolTypeList) {
             <span class="list-group-item text-center" ><a href="@routes.Tools.getToolByType(t.id)">@t.name</a></span>
             }
@@ -22,14 +37,9 @@
                         <span>Owner: <a href="@routes.Tools.getToolByUser(g.owner.id)">@g.owner.username</a></span><br>
                         <span>Type: <a href="@routes.Tools.getToolByType(g.toolType.id)">@g.toolType.name</a></span><br>
                         <div class="row-fluid">
-                            <form action="@routes.Tools.eachTool(g.id)" methode="get">
+                            <form action="@routes.Tools.eachTool(g.id)" method="get">
                                 <button class="btn btn-default pull-left span1">Check</button>
                             </form>
-                            @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(g.owner.id)) {
-                            <form action="@routes.Tools.remove(g.id)" method="post">
-                                <button class="btn btn-caution pull-right span1" >Delete</button>
-                            </form>
-                            }
                         </div>
                     </div>
                 </div>
@@ -39,5 +49,4 @@
         </div>
     </div>
 </div>
-}
 }

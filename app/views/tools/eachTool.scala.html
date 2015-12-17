@@ -1,4 +1,4 @@
-@(tool: Tool)
+@(owner: Users, tool: Tool, comments: List[Comment], isRequested: Boolean)
 
 @main(tool.name){
 	<div class="jumbotron index-main caption">
@@ -6,17 +6,45 @@
             <h2 class="ten-left-pad">@tool.name</h2>
             <h4 class="ten-left-pad">Owner: <a href="@routes.Tools.getToolByUser(tool.owner.id)">@tool.owner.username</a></h4>
             <h4 class="ten-left-pad"> Descripion: </h4>
-            <p class="text-center desc">@tool.description</p> 
-        @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(tool.owner.id)) {
-            <form action="@routes.Tools.remove(tool.id)" method="post">
-                <button class="btn btn-caution">Delete</button>
+            <p class="text-center desc">@tool.description</p>
+        @if(session.containsKey("user_id") && !Long.parseLong(session.get("user_id")).equals(owner.id) ){
+            @if(isRequested){
+                <button class="btn disabled">Requested...</button>
+            } else { @if(tool.borrower == null) {
+                <form action="@routes.Tools.requestBorrow(tool.id)" method="post">
+                    <button class="btn btn-default">Borrow</button>
+                </form>
+                } else { @if(tool.borrower.id == Long.parseLong(session.get("user_id"))) {
+                    @if(tool.requestReturn) {
+                    <button class="btn disabled">Return pending...</button>
+                    } else {
+                    <form action="@routes.Tools.requestReturn(tool.id)" method="post">
+                        <button class="btn btn-default">Return</button>
+                    </form>
+                    }
+            } else {
+                <button class="btn disabled">Borrow</button>
+            }}}
+        } else { @if(tool.requestReturn) {
+            <form action="@routes.Tools.acceptReturn(tool.id)" method="post">
+                <button class="btn btn-default">Accept Return</button>
             </form>
-        } else {
-            <form action="@routes.Tools.requestBorrow(tool.id)" method="post">
-                <button class="btn btn-default">Borrow</button>
-            </form>
-    }
+        }}
         </div>
+        @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(owner.id)){
+        @for(r <- tool.requestList){
+        <div class="item">
+            <form action="@routes.Tools.lendTool(r.requestedTool.id, r.requester.id)" method="post">
+                <label>Requester: @r.requester.username</label>
+                <button class="btn btn-accept">Lend</button>
+            </form>
+
+            <form action="@routes.Tools.rejectLend(r.requestedTool.id, r.requester.id)" method="post">
+                <button class="btn btn-caution">Reject</button>
+            </form>
+        </div>
+        }
+        }
     </div>
 
     <div class="jumbotron index-main" style="max-height:100%">
@@ -26,27 +54,6 @@
                 <button class="btn btn-default">Post</button>
             </form>
         </div>
-
-        @*List reuqests
-        @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(tool.owner.id)) {
-        <form action="@routes.Tools.remove(tool.id)" method="post">
-            <button class="btn btn-caution">Delete</button>
-        </form><br>
-            @for(r <- tool.requestList){
-            <div class="item">
-                <form action="@routes.Tools.lendTool(r.requestedTool.id, r.requester.id)" method="post">
-                    <label>Requester: @r.requester.username</label>
-                    <button class="btn btn-accept">Lend</button>
-                </form>
-
-                <form >
-                    <button class="btn btn-caution">Reject</button>
-                </form>
-            </div>
-            }
-        }
-        *@
-        
         @for(c <- tool.comments) {
         <div class="col-lg-12 comment-section ">
             <div class="row vertical-align">

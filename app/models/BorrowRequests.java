@@ -19,10 +19,6 @@ public class BorrowRequests extends Model {
     public long id;
 
     @Constraints.Required
-    @ManyToOne
-    public Users owner;
-
-    @Constraints.Required
     public String message;
 
     @Constraints.Required
@@ -52,14 +48,4 @@ public class BorrowRequests extends Model {
         return borrowRequests;
     }
 
-    @PostPersist
-    private void postPersist() {
-        //this.requestedTool.owner.notifyRequest(this);
-    }
-
-/*    @PreRemove
-    private void preRemove() {
-        //send user notification here
-        //ie: requester.notify();
-    }*/
 }

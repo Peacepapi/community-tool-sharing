@@ -37,6 +37,10 @@ public class Tool extends Model {
     @ManyToOne
     public Users borrower = null;
 
+    public boolean requestReturn = false;
+
+    public int requestCount = 0;
+
     @OneToMany(mappedBy = "tool", cascade = CascadeType.ALL)
     public List<Comment> comments = new ArrayList<>();
 
