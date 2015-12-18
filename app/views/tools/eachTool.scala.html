@@ -1,72 +1,77 @@
 @(owner: Users, tool: Tool, comments: List[Comment], isRequested: Boolean)
 
 @main(tool.name){
-	<div class="jumbotron index-main caption">
+	<div class="jumbotron index-main caption" style="background:white">
         <div class="text-container">
             <h2 class="ten-left-pad">@tool.name</h2>
             <h4 class="ten-left-pad">Owner: <a href="@routes.Tools.getToolByUser(tool.owner.id)">@tool.owner.username</a></h4>
             <h4 class="ten-left-pad"> Descripion: </h4>
-            <p class="text-center desc">@tool.description</p>
-        @if(session.containsKey("user_id") && !Long.parseLong(session.get("user_id")).equals(owner.id) ){
-            @if(isRequested){
-                <button class="btn disabled">Requested...</button>
-            } else { @if(tool.borrower == null) {
-                <form action="@routes.Tools.requestBorrow(tool.id)" method="post">
-                    <button class="btn btn-default">Borrow</button>
-                </form>
-                } else { @if(tool.borrower.id == Long.parseLong(session.get("user_id"))) {
-                        @if(tool.requestReturn) {
-                        <button class="btn disabled">Return pending...</button>
-                        } else {
-                        <form action="@routes.Tools.requestReturn(tool.id)" method="post">
-                            <button class="btn btn-default">Return</button>
-                        </form>
+            <p class="desc" style="padding:0 0 0 50px">@tool.description</p>
+
+            <div class="text-center">
+             @if(session.containsKey("user_id") && !Long.parseLong(session.get("user_id")).equals(owner.id) ){
+                        @if(isRequested){
+                            <button class="btn disabled">Requested...</button>
+                        } else { @if(tool.borrower == null) {
+                            <form action="@routes.Tools.requestBorrow(tool.id)" method="post">
+                                <button class="btn btn-default">Borrow</button>
+                            </form>
+                            } else { @if(tool.borrower.id == Long.parseLong(session.get("user_id"))) {
+                                    @if(tool.requestReturn) {
+                                    <button class="btn disabled">Return pending...</button>
+                                    } else {
+                                    <form action="@routes.Tools.requestReturn(tool.id)" method="post">
+                                        <button class="btn btn-default">Return</button>
+                                    </form>
+                                    }
+                                } else {
+                                    <button class="btn disabled">Loaned</button>
+                                }
+                            }
                         }
-                    } else {
-                        <button class="btn disabled">Loaned</button>
-                    }
+                    } else { @if(tool.requestReturn) {
+                        <form action="@routes.Tools.acceptReturn(tool.id)" method="post">
+                            <button class="btn btn-default">Accept Return</button>
+                        </form>
+                    }}
+            @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(owner.id)){
+                @for(r <- tool.requestList){
+                <div class="item">
+                    <label>Requester: @r.requester.username</label>
+                    <div style="float:right" >
+                        <form action="@routes.Tools.lendTool(r.requestedTool.id, r.requester.id)" method="post">
+                            <button class="btn btn-accept">Lend</button>
+                        </form>
+                    </div>
+                    <div style="float:right">
+                        <form action="@routes.Tools.rejectLend(r.requestedTool.id, r.requester.id)" method="post">
+                            <button class="btn btn-caution">Reject</button>
+                        </form>
+                    </div>
+                </div>
                 }
             }
-        } else { @if(tool.requestReturn) {
-            <form action="@routes.Tools.acceptReturn(tool.id)" method="post">
-                <button class="btn btn-default">Accept Return</button>
-            </form>
-        }}
+            </div>
         </div>
-        @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(owner.id)){
-        @for(r <- tool.requestList){
-        <div class="item">
-            <form action="@routes.Tools.lendTool(r.requestedTool.id, r.requester.id)" method="post">
-                <label>Requester: @r.requester.username</label>
-                <button class="btn btn-accept">Lend</button>
-            </form>
-
-            <form action="@routes.Tools.rejectLend(r.requestedTool.id, r.requester.id)" method="post">
-                <button class="btn btn-caution">Reject</button>
-            </form>
-        </div>
-        }
-        }
-    </div>
-
-    <div class="jumbotron index-main" style="max-height:100%">
-        <div class="text-center round-egde">
+        <div class="text-center">
             <form action="@routes.Comments.postComment(tool.id)" method="post">
                 <input class="comment" placeholder="Write a comment" name="body" required>
-                <button class="btn btn-default">Post</button>
+                <div style="margin:0 auto;padding:25px 0 25px 0">
+                    <button class="btn btn-default">Post</button>
+                </div>
             </form>
         </div>
         @for(c <- tool.comments) {
-        <div class="col-lg-12 comment-section ">
+        <div class="col-lg-12 comment-section">
             <div class="row vertical-align">
-                <div class="col-lg-3 col-md-3 round-egde poster">
+                <div class="col-lg-3 col-md-3 poster">
                     <h4>@c.poster.username</h4>
                     <p style="font-size:1em;">@c.datetime_posted</p>
                 </div>
-                <div class="col-lg-9 col-md-9 round-egde poster" style="height:150px">@c.body</div>
+                <div class="col-lg-9 col-md-9 poster" style="border-left: 5px solid white;
+    height:150px">@c.body</div>
             </div>
         </div>
         }
-    </div> 
-	
+    </div>
 }

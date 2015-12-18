@@ -4,7 +4,7 @@
 <div class="container index-main">
     <div class="row">
         <div class="list-group categories round-egde col-lg-2 col-md-2 col-sm-1" style="padding-left:10px">
-            <span class="list-group-item text-center">Categories <span class="glyphicon glyphicon-plus"></span></span>
+            <span class="list-group-item text-center">Categories</span>
             <span class="list-group-item text-center" ><a href="@routes.Tools.browse()">All</a></span>
             @for(t <- toolTypeList) {
             <span class="list-group-item text-center" ><a href="@routes.Tools.getToolByType(t.id)">@t.name</a></span>
