@@ -36,7 +36,7 @@
                     }}
             @if(session.containsKey("user_id") && Long.parseLong(session.get("user_id")).equals(owner.id)){
                 @for(r <- tool.requestList){
-                <div class="item">
+                <div class="item" style="padding-bottom:25px">
                     <label>Requester: @r.requester.username</label>
                     <div style="float:right" >
                         <form action="@routes.Tools.lendTool(r.requestedTool.id, r.requester.id)" method="post">
